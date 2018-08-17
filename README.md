@@ -29,17 +29,15 @@ GLOBAL OPTIONS:
    --version, -v                              print the version
 ```
 
-### Prerequisites
-
-* go v1.10+
-* make
-* [auto-changelog](https://www.npmjs.com/package/auto-changelog) (Optional. Used for managing releases)
-
 ## Built With
 
 * go v1.10+
 * make
 * [github.com/mitchellh/gox](https://github.com/mitchellh/gox)
+
+## Deployment
+
+Run `./release.sh $VERISION`
 
 ## Contributing
 

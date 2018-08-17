@@ -2,7 +2,7 @@ NAME=gwvault
 
 VERSION=$$(git describe --tags --always)
 
-LDFLAGS=-ldflags "-X main.version=${VERSION}"
+LDFLAGS=-ldflags=all="-X main.version=${VERSION}"
 
 all: tools build
 

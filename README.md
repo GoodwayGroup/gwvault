@@ -9,6 +9,7 @@
 Us in place of `ansible-vault`. All commands are reimplemented except for `encrypt_string` and `rekey` (coming soom!). The tool will default to asking for your Vault password.
 
 ```
+$ gwvault -h
 NAME:
    gwvault - encryption/decryption utility for Ansible data files
 
@@ -27,6 +28,12 @@ GLOBAL OPTIONS:
    --vault-password-file VAULT_PASSWORD_FILE  vault password file VAULT_PASSWORD_FILE
    --help, -h                                 show help
    --version, -v                              print the version
+```
+
+## Installation
+
+```
+$ curl https://i.jpillora.com/GoodwayGroup/gwvault! | bash
 ```
 
 ## Built With

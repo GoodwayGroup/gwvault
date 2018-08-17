@@ -20,7 +20,7 @@ COMMANDS:
      encrypt  encrypt file
      decrypt  decrypt file
      edit     edit file and re-encrypt
-     create   create a new encypted file
+     create   create a new encrypted file
      view     view contents of encrypted file
      help, h  Shows a list of commands or help for one command
 

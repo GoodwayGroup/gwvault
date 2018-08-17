@@ -221,7 +221,7 @@ func main() {
 		},
 		{
 			Name:      "create",
-			Usage:     "create a new encypted file",
+			Usage:     "create a new encrypted file",
 			UsageText: "[options] [vaultfile.yml]",
 			Flags: []cli.Flag{
 				cli.StringFlag{

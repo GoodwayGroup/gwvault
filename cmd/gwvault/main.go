@@ -49,7 +49,7 @@ func main() {
 				if err != nil {
 					return err
 				}
-				vaultFileName, err := validateAndGetVaultFile(c)
+				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
 					return err
 				}
@@ -59,13 +59,16 @@ func main() {
 				}
 
 				// Encrypt
-				result, err := avtool.EncryptFile(vaultFileName, pw)
-				if err != nil {
-					return cli.NewExitError(err, 2)
-				}
-				err = ioutil.WriteFile(vaultFileName, []byte(result), 0644)
-				if err != nil {
-					return cli.NewExitError(err, 2)
+				for i := 0; i < len(vaultFileNames); i++ {
+					vaultFileName := vaultFileNames[i]
+					result, err := avtool.EncryptFile(vaultFileName, pw)
+					if err != nil {
+						return cli.NewExitError(err, 2)
+					}
+					err = ioutil.WriteFile(vaultFileName, []byte(result), 0644)
+					if err != nil {
+						return cli.NewExitError(err, 2)
+					}
 				}
 
 				println("Encryption successful")
@@ -90,7 +93,7 @@ func main() {
 				if err != nil {
 					return err
 				}
-				vaultFileName, err := validateAndGetVaultFile(c)
+				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
 					return err
 				}
@@ -102,33 +105,39 @@ func main() {
 				}
 
 				// Decrypt
-				result, err := avtool.DecryptFile(vaultFileName, pw)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+				for i := 0; i < len(vaultFileNames); i++ {
+					vaultFileName := vaultFileNames[i]
+					result, err := avtool.DecryptFile(vaultFileName, pw)
+					if err != nil {
+						if strings.Compare(err.Error(), "ERROR: runtime error: index out of range") == 0 {
+							return cli.NewExitError("input is not a vault encrypted "+vaultFileName+" is not a vault encrypted file for "+vaultFileName, 2)
+						}
+						return cli.NewExitError(err, 1)
+					}
 
-				// Create a temp file
-				tempFile, err := ioutil.TempFile("", "vault")
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+					// Create a temp file
+					tempFile, err := ioutil.TempFile("", "vault")
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-				// Write decrypted contents to temp file
-				err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+					// Write decrypted contents to temp file
+					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-				// Move temp file to old file
-				err = os.Rename(tempFile.Name(), vaultFileName)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+					// Move temp file to old file
+					err = os.Rename(tempFile.Name(), vaultFileName)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-				// Close file
-				err = tempFile.Close()
-				if err != nil {
-					return cli.NewExitError(err, 1)
+					// Close file
+					err = tempFile.Close()
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 				}
 
 				println("Decryption successful")
@@ -153,7 +162,7 @@ func main() {
 				if err != nil {
 					return err
 				}
-				vaultFileName, err := validateAndGetVaultFile(c)
+				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
 					return err
 				}
@@ -165,53 +174,59 @@ func main() {
 				}
 
 				// Decrypt
-				result, err := avtool.DecryptFile(vaultFileName, pw)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+				for i := 0; i < len(vaultFileNames); i++ {
+					vaultFileName := vaultFileNames[i]
+					result, err := avtool.DecryptFile(vaultFileName, pw)
+					if err != nil {
+						if strings.Compare(err.Error(), "ERROR: runtime error: index out of range") == 0 {
+							return cli.NewExitError("input is not a vault encrypted "+vaultFileName+" is not a vault encrypted file for "+vaultFileName, 2)
+						}
+						return cli.NewExitError(err, 1)
+					}
 
-				// Create a new temp file
-				tempFile, err := ioutil.TempFile("", "vault")
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+					// Create a new temp file
+					tempFile, err := ioutil.TempFile("", "vault")
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-				// Write decrypted contents to temp file
-				err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+					// Write decrypted contents to temp file
+					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-				// Open editor for modifications
-				cmd := exec.Command("vim", tempFile.Name())
-				cmd.Stdout = os.Stdout
-				cmd.Stdin = os.Stdin
-				cmd.Stderr = os.Stderr
-				err = cmd.Run()
-				if err != nil {
-					return cli.NewExitError(err, 2)
-				}
+					// Open editor for modifications
+					cmd := exec.Command("vim", tempFile.Name())
+					cmd.Stdout = os.Stdout
+					cmd.Stdin = os.Stdin
+					cmd.Stderr = os.Stderr
+					err = cmd.Run()
+					if err != nil {
+						return cli.NewExitError(err, 2)
+					}
 
-				// Encrypt temp file
-				result, err = avtool.EncryptFile(tempFile.Name(), pw)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
-				err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+					// Encrypt temp file
+					result, err = avtool.EncryptFile(tempFile.Name(), pw)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
+					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-				// Move temp file to old file
-				err = os.Rename(tempFile.Name(), vaultFileName)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+					// Move temp file to old file
+					err = os.Rename(tempFile.Name(), vaultFileName)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-				// Close file
-				err = tempFile.Close()
-				if err != nil {
-					return cli.NewExitError(err, 1)
+					// Close file
+					err = tempFile.Close()
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 				}
 
 				println("Vault file edited")
@@ -309,7 +324,7 @@ func main() {
 				if err != nil {
 					return err
 				}
-				vaultFileName, err := validateAndGetVaultFile(c)
+				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
 					return err
 				}
@@ -319,39 +334,47 @@ func main() {
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
-				result, err := avtool.DecryptFile(vaultFileName, pw)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
 
-				// Create a new temp file
-				tempFile, err := ioutil.TempFile("", "vault")
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+				// Decrypt
+				for i := 0; i < len(vaultFileNames); i++ {
+					vaultFileName := vaultFileNames[i]
+					result, err := avtool.DecryptFile(vaultFileName, pw)
+					if err != nil {
+						if strings.Compare(err.Error(), "ERROR: runtime error: index out of range") == 0 {
+							return cli.NewExitError("input is not a vault encrypted "+vaultFileName+" is not a vault encrypted file for "+vaultFileName, 2)
+						}
+						return cli.NewExitError(err, 1)
+					}
 
-				err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+					// Create a new temp file
+					tempFile, err := ioutil.TempFile("", "vault")
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-				// Open 'more' stream of contents
-				cmd := exec.Command("more", tempFile.Name())
-				cmd.Stdout = os.Stdout
-				cmd.Stdin = os.Stdin
-				cmd.Stderr = os.Stderr
-				cmd.Run()
+					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-				// Close temp file
-				err = tempFile.Close()
-				if err != nil {
-					return cli.NewExitError(err, 1)
-				}
+					// Open 'more' stream of contents
+					cmd := exec.Command("more", tempFile.Name())
+					cmd.Stdout = os.Stdout
+					cmd.Stdin = os.Stdin
+					cmd.Stderr = os.Stderr
+					cmd.Run()
 
-				// Delete the temp file
-				err = os.Remove(tempFile.Name())
-				if err != nil {
-					return cli.NewExitError(err, 1)
+					// Close temp file
+					err = tempFile.Close()
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
+
+					// Delete the temp file
+					err = os.Remove(tempFile.Name())
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 				}
 
 				return nil
@@ -364,35 +387,60 @@ func main() {
 func validateCommandArgs(c *cli.Context) (err error) {
 	if !c.Args().Present() {
 		cli.ShowSubcommandHelp(c)
-		return cli.NewExitError(errors.New("ERROR: Empty or Invalid inputs! Please ref. to usage instructions!"), 2)
+		return cli.NewExitError(errors.New("ERROR: no vaild files provided"), 2)
 	}
 	return nil
 }
 
-func validateAndGetVaultFile(c *cli.Context) (filename string, err error) {
-	filename = strings.TrimSpace(c.Args().First())
-	if filename == "" {
+func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
+	var warnings []string
+	if c.NArg() <= 0 {
 		cli.ShowSubcommandHelp(c)
-		return filename, cli.NewExitError(errors.New("ERROR: Filename not specified!  Please ref. to usage instructions!"), 2)
-	} else {
+		return files, cli.NewExitError(errors.New("ERROR: no vaild files provided"), 2)
+	}
+
+	for i := 0; i < c.NArg(); i++ {
+		filename := c.Args().Get(i)
+
+		println(filename)
+
 		if fileInfo, err := os.Stat(filename); os.IsNotExist(err) {
-			cli.ShowSubcommandHelp(c)
-			return filename, cli.NewExitError(errors.New("ERROR: file "+filename+" "+"doesn't exist!"), 2)
+			warnings = append(warnings, "WARN: skipping file "+filename+" because it does not exist")
+			continue
 		} else {
 			if fileInfo.IsDir() {
-				cli.ShowSubcommandHelp(c)
-				return filename, cli.NewExitError(errors.New("ERROR: file "+filename+" is a "+"directory!"), 2)
+				warnings = append(warnings, "WARN: skipping file "+filename+" because it is a directory")
+				continue
 			}
 		}
+
+		files = append(files, filename)
 	}
-	return filename, nil
+
+	if len(warnings) > 0 {
+		for i := 0; i < len(warnings); i++ {
+			println(warnings[i])
+		}
+	}
+
+	if len(files) <= 0 {
+		cli.ShowSubcommandHelp(c)
+		return files, cli.NewExitError(errors.New("ERROR: No supported files found"), 2)
+	}
+
+	return files, nil
 }
 
 func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error) {
+	if c.NArg() > 1 {
+		cli.ShowSubcommandHelp(c)
+		return files, cli.NewExitError(errors.New("ERROR: can only create one vault file at a time"), 2)
+	}
+
 	filename = strings.TrimSpace(c.Args().First())
 	if filename == "" {
 		cli.ShowSubcommandHelp(c)
-		return filename, cli.NewExitError(errors.New("ERROR: Filename not specified!  Please ref. to usage instructions!"), 2)
+		return filename, cli.NewExitError(errors.New("ERROR: filename not specified"), 2)
 	} else {
 		if fileInfo, err := os.Stat(filename); os.IsNotExist(err) {
 			// File does not exist, good to go
@@ -400,9 +448,9 @@ func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error
 		} else {
 			if fileInfo.IsDir() {
 				cli.ShowSubcommandHelp(c)
-				return filename, cli.NewExitError(errors.New("ERROR: file "+filename+" is a directory!"), 2)
+				return filename, cli.NewExitError(errors.New("ERROR: file "+filename+" is a directory"), 2)
 			}
-			return filename, cli.NewExitError(errors.New("ERROR: file "+filename+" already exists!"), 2)
+			return filename, cli.NewExitError(errors.New("ERROR: file "+filename+" already exists"), 2)
 		}
 	}
 	// return filename, error on error; nil if no error;

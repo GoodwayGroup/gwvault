@@ -434,7 +434,7 @@ func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
 func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error) {
 	if c.NArg() > 1 {
 		cli.ShowSubcommandHelp(c)
-		return files, cli.NewExitError(errors.New("ERROR: can only create one vault file at a time"), 2)
+		return filename, cli.NewExitError(errors.New("ERROR: can only create one vault file at a time"), 2)
 	}
 
 	filename = strings.TrimSpace(c.Args().First())

@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"strings"
 	"syscall"
+
 	"github.com/pbthorste/avtool"
 	"golang.org/x/crypto/ssh/terminal"
 	"gopkg.in/urfave/cli.v1"
@@ -17,8 +18,8 @@ var (
 )
 
 // OG: [create|decrypt|edit|encrypt|encrypt_string|rekey|view] [options] [vaultfile.yml]
-// DONE: [create|decrypt|edit|encrypt|view]
-// TODO: [encrypt_string|rekey]
+// DONE: [create|decrypt|edit|encrypt|encrypt_string|view]
+// TODO: [rekey]
 
 func main() {
 	app := cli.NewApp()
@@ -380,6 +381,40 @@ func main() {
 				return nil
 			},
 		},
+		{
+			Name:      "encrypt_string",
+			Usage:     "encrypt provided string",
+			UsageText: "[options] string_to_encrypt",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "vault-password-file",
+					Usage: "vault password file `VAULT_PASSWORD_FILE`",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				vaultPassword := c.String("vault-password-file")
+				// Validate CLI args
+				strToEncrypt, err := validateAndGetStringToEncrypt(c)
+				if err != nil {
+					return err
+				}
+				pw, err := retrieveVaultPassword(vaultPassword)
+				if err != nil {
+					return cli.NewExitError(err, 2)
+				}
+
+				// Encrypt
+				result, err := avtool.Encrypt(strToEncrypt, pw)
+				if err != nil {
+					return cli.NewExitError(err, 2)
+				}
+				println(result)
+
+				println("Encryption successful")
+
+				return nil
+			},
+		},
 	}
 	app.Run(os.Args)
 }
@@ -431,6 +466,25 @@ func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
 	return files, nil
 }
 
+func validateAndGetStringToEncrypt(c *cli.Context) (strToEncrypt string, err error) {
+	if c.NArg() <= 0 {
+		println("String to encrypt: ")
+		byteInput, err2 := terminal.ReadPassword(int(syscall.Stdin))
+		if err2 != nil {
+			err2 = errors.New("ERROR: could not input string, " + err2.Error())
+			return
+		}
+		strToEncrypt = string(byteInput)
+
+		cli.ShowSubcommandHelp(c)
+		return strToEncrypt, nil
+	}
+
+	strToEncrypt = strings.TrimSpace(c.Args().First())
+
+	return strToEncrypt, nil
+}
+
 func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error) {
 	if c.NArg() > 1 {
 		cli.ShowSubcommandHelp(c)
@@ -453,8 +507,6 @@ func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error
 			return filename, cli.NewExitError(errors.New("ERROR: file "+filename+" already exists"), 2)
 		}
 	}
-	// return filename, error on error; nil if no error;
-	return filename, nil
 }
 
 func retrieveVaultPassword(vaultPasswordFile string) (string, error) {

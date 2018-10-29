@@ -16,13 +16,17 @@ NAME:
 USAGE:
    gwvault [global options] command [command options] [arguments...]
 
+VERSION:
+   1.1.0
+
 COMMANDS:
-     encrypt  encrypt file
-     decrypt  decrypt file
-     edit     edit file and re-encrypt
-     create   create a new encrypted file
-     view     view contents of encrypted file
-     help, h  Shows a list of commands or help for one command
+     encrypt         encrypt file
+     decrypt         decrypt file
+     edit            edit file and re-encrypt
+     create          create a new encrypted file
+     view            view contents of encrypted file
+     encrypt_string  encrypt provided string
+     help, h         Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --vault-password-file VAULT_PASSWORD_FILE  vault password file VAULT_PASSWORD_FILE
@@ -35,6 +39,21 @@ GLOBAL OPTIONS:
 ```
 $ curl https://i.jpillora.com/GoodwayGroup/gwvault! | bash
 ```
+
+## Benchmarks
+
+Benchmarking done using [`bench`](https://github.com/Gabriel439/bench). Execute the `benchmark/run.sh` script to generate a new benchmark.
+
+As compared to `ansible-vault`, typical actions take a 1/10th the time to complete.
+
+|Action|`ansible-vault`|`gwvault`|
+|------|---------------|---------|
+| encrypt | 633 ms | **76 ms** |
+| decrypt | 639 ms | **72 ms** |
+| encrypt_string | 536 ms | **42 ms** |
+| encrypt + decrypt | 1,160 ms | **105 ms** |
+
+See [`./benchmark/results.html`](./benchmark/results.html) for a detailed breakdown of the results.
 
 ## Built With
 

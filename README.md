@@ -6,7 +6,7 @@
 
 ## Basic Usage
 
-Us in place of `ansible-vault`. All commands are reimplemented except for `encrypt_string` and `rekey` (coming soom!). The tool will default to asking for your Vault password.
+Use in place of `ansible-vault`. All commands are reimplemented except for `rekey` (coming soom!). The tool will default to asking for your Vault password.
 
 ```
 $ gwvault -h

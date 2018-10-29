@@ -63,7 +63,7 @@ See [`./benchmark/results.html`](./benchmark/results.html) for a detailed breakd
 
 ## Deployment
 
-Run `./release.sh $VERISION`
+Run `./release.sh $VERSION`
 
 ## Contributing
 

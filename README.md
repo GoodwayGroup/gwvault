@@ -17,7 +17,7 @@ USAGE:
    gwvault [global options] command [command options] [arguments...]
 
 VERSION:
-   1.1.0
+   1.2.0
 
 COMMANDS:
      encrypt         encrypt file

@@ -31,6 +31,10 @@ func main() {
 			Name:  "vault-password-file",
 			Usage: "vault password file `VAULT_PASSWORD_FILE`",
 		},
+		cli.StringFlag{
+			Name:  "new-vault-password-file",
+			Usage: "new vault password file for rekey `NEW_VAULT_PASSWORD_FILE`",
+		},
 	}
 	app.Commands = []cli.Command{
 		{
@@ -246,7 +250,7 @@ func main() {
 		        },
 		        cli.StringFlag{
 		            Name:  "new-vault-password-file",
-		            Usage: "vault password file for re-encryption `NEW_VAULT_PASSWORD_FILE`",
+		            Usage: "new vault password file for rekey `NEW_VAULT_PASSWORD_FILE`",
 		        },
 		    },
 		    Action: func(c *cli.Context) error {

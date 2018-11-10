@@ -236,6 +236,96 @@ func main() {
 			},
 		},
 		{
+		    Name:      "rekey",
+		    Usage:     "alter encryption password and re-encrypt",
+		    UsageText: "[options] [vaultfile.yml] [newvaultfile.yml]",
+		    Flags: []cli.Flag{
+		        cli.StringFlag{
+		            Name:  "vault-password-file",
+		            Usage: "vault password file `VAULT_PASSWORD_FILE`",
+		        },
+		        cli.StringFlag{
+		            Name:  "new-vault-password-file",
+		            Usage: "vault password file for re-encryption `NEW_VAULT_PASSWORD_FILE`",
+		        },
+		    },
+		    Action: func(c *cli.Context) error {
+		        vaultPassword := c.String("vault-password-file")
+		        newVaultPassword := c.String("new-vault-password-file")
+		        // Validate CLI args
+		        err := validateCommandArgs(c)
+		        if err != nil {
+		            return err
+		        }
+		        vaultFileNames, err := validateAndGetVaultFile(c)
+		        if err != nil {
+		            return err
+		        }
+
+		        // Get Vault password
+		        pw, err := retrieveVaultPassword(vaultPassword)
+		        if err != nil {
+		            return cli.NewExitError(err, 2)
+		        }
+
+		        // Get New Vault password
+		        newPw, err := retrieveVaultPassword(newVaultPassword)
+		        if err != nil {
+		            return cli.NewExitError(err, 2)
+		        }
+
+		        // Decrypt
+		        for i := 0; i < len(vaultFileNames); i++ {
+		            vaultFileName := vaultFileNames[i]
+		            result, err := avtool.DecryptFile(vaultFileName, pw)
+		            if err != nil {
+		                if strings.Compare(err.Error(), "ERROR: runtime error: index out of range") == 0 {
+		                    return cli.NewExitError("input is not a vault encrypted "+vaultFileName+" is not a vault encrypted file for "+vaultFileName, 2)
+		                }
+		                return cli.NewExitError(err, 1)
+		            }
+
+		            // Create a new temp file
+		            tempFile, err := ioutil.TempFile("", "vault")
+		            if err != nil {
+		                return cli.NewExitError(err, 1)
+		            }
+
+		            // Write decrypted contents to temp file
+		            err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+		            if err != nil {
+		                return cli.NewExitError(err, 1)
+		            }
+
+		            // Encrypt temp file with new pw
+		            result, err = avtool.EncryptFile(tempFile.Name(), newPw)
+		            if err != nil {
+		                return cli.NewExitError(err, 1)
+		            }
+		            err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+		            if err != nil {
+		                return cli.NewExitError(err, 1)
+		            }
+
+		            // Move temp file to old file
+		            err = os.Rename(tempFile.Name(), vaultFileName)
+		            if err != nil {
+		                return cli.NewExitError(err, 1)
+		            }
+
+		            // Close file
+		            err = tempFile.Close()
+		            if err != nil {
+		                return cli.NewExitError(err, 1)
+		            }
+		        }
+
+		        println("Vault file edited")
+
+		        return nil
+		    },
+		},
+		{
 			Name:      "create",
 			Usage:     "create a new encrypted file",
 			UsageText: "[options] [vaultfile.yml]",

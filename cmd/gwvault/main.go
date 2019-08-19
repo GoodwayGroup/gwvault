@@ -202,7 +202,7 @@ func main() {
 					}
 
 					// Open editor for modifications
-					cmd := exec.Command("vim", tempFile.Name())
+					cmd := exec.Command(getEditor(), tempFile.Name())
 					cmd.Stdout = os.Stdout
 					cmd.Stdin = os.Stdin
 					cmd.Stderr = os.Stderr
@@ -240,94 +240,94 @@ func main() {
 			},
 		},
 		{
-		    Name:      "rekey",
-		    Usage:     "alter encryption password and re-encrypt",
-		    UsageText: "[options] [vaultfile.yml] [newvaultfile.yml]",
-		    Flags: []cli.Flag{
-		        cli.StringFlag{
-		            Name:  "vault-password-file",
-		            Usage: "vault password file `VAULT_PASSWORD_FILE`",
-		        },
-		        cli.StringFlag{
-		            Name:  "new-vault-password-file",
-		            Usage: "new vault password file for rekey `NEW_VAULT_PASSWORD_FILE`",
-		        },
-		    },
-		    Action: func(c *cli.Context) error {
-		        vaultPassword := c.String("vault-password-file")
-		        newVaultPassword := c.String("new-vault-password-file")
-		        // Validate CLI args
-		        err := validateCommandArgs(c)
-		        if err != nil {
-		            return err
-		        }
-		        vaultFileNames, err := validateAndGetVaultFile(c)
-		        if err != nil {
-		            return err
-		        }
+			Name:      "rekey",
+			Usage:     "alter encryption password and re-encrypt",
+			UsageText: "[options] [vaultfile.yml] [newvaultfile.yml]",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "vault-password-file",
+					Usage: "vault password file `VAULT_PASSWORD_FILE`",
+				},
+				cli.StringFlag{
+					Name:  "new-vault-password-file",
+					Usage: "new vault password file for rekey `NEW_VAULT_PASSWORD_FILE`",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				vaultPassword := c.String("vault-password-file")
+				newVaultPassword := c.String("new-vault-password-file")
+				// Validate CLI args
+				err := validateCommandArgs(c)
+				if err != nil {
+					return err
+				}
+				vaultFileNames, err := validateAndGetVaultFile(c)
+				if err != nil {
+					return err
+				}
 
-		        // Get Vault password
-		        pw, err := retrieveVaultPassword(vaultPassword)
-		        if err != nil {
-		            return cli.NewExitError(err, 2)
-		        }
+				// Get Vault password
+				pw, err := retrieveVaultPassword(vaultPassword)
+				if err != nil {
+					return cli.NewExitError(err, 2)
+				}
 
-		        // Get New Vault password
-		        newPw, err := retrieveVaultPassword(newVaultPassword)
-		        if err != nil {
-		            return cli.NewExitError(err, 2)
-		        }
+				// Get New Vault password
+				newPw, err := retrieveVaultPassword(newVaultPassword)
+				if err != nil {
+					return cli.NewExitError(err, 2)
+				}
 
-		        // Decrypt
-		        for i := 0; i < len(vaultFileNames); i++ {
-		            vaultFileName := vaultFileNames[i]
-		            result, err := avtool.DecryptFile(vaultFileName, pw)
-		            if err != nil {
-		                if strings.Compare(err.Error(), "ERROR: runtime error: index out of range") == 0 {
-		                    return cli.NewExitError("input is not a vault encrypted "+vaultFileName+" is not a vault encrypted file for "+vaultFileName, 2)
-		                }
-		                return cli.NewExitError(err, 1)
-		            }
+				// Decrypt
+				for i := 0; i < len(vaultFileNames); i++ {
+					vaultFileName := vaultFileNames[i]
+					result, err := avtool.DecryptFile(vaultFileName, pw)
+					if err != nil {
+						if strings.Compare(err.Error(), "ERROR: runtime error: index out of range") == 0 {
+							return cli.NewExitError("input is not a vault encrypted "+vaultFileName+" is not a vault encrypted file for "+vaultFileName, 2)
+						}
+						return cli.NewExitError(err, 1)
+					}
 
-		            // Create a new temp file
-		            tempFile, err := ioutil.TempFile("", "vault")
-		            if err != nil {
-		                return cli.NewExitError(err, 1)
-		            }
+					// Create a new temp file
+					tempFile, err := ioutil.TempFile("", "vault")
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-		            // Write decrypted contents to temp file
-		            err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
-		            if err != nil {
-		                return cli.NewExitError(err, 1)
-		            }
+					// Write decrypted contents to temp file
+					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-		            // Encrypt temp file with new pw
-		            result, err = avtool.EncryptFile(tempFile.Name(), newPw)
-		            if err != nil {
-		                return cli.NewExitError(err, 1)
-		            }
-		            err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
-		            if err != nil {
-		                return cli.NewExitError(err, 1)
-		            }
+					// Encrypt temp file with new pw
+					result, err = avtool.EncryptFile(tempFile.Name(), newPw)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
+					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-		            // Move temp file to old file
-		            err = os.Rename(tempFile.Name(), vaultFileName)
-		            if err != nil {
-		                return cli.NewExitError(err, 1)
-		            }
+					// Move temp file to old file
+					err = os.Rename(tempFile.Name(), vaultFileName)
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
-		            // Close file
-		            err = tempFile.Close()
-		            if err != nil {
-		                return cli.NewExitError(err, 1)
-		            }
-		        }
+					// Close file
+					err = tempFile.Close()
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
+				}
 
-		        println("Vault file edited")
+				println("Vault file edited")
 
-		        return nil
-		    },
+				return nil
+			},
 		},
 		{
 			Name:      "create",
@@ -364,7 +364,7 @@ func main() {
 				}
 
 				// Open temp file for edit
-				cmd := exec.Command("vim", tempFile.Name())
+				cmd := exec.Command(getEditor(), tempFile.Name())
 				cmd.Stdout = os.Stdout
 				cmd.Stdin = os.Stdin
 				cmd.Stderr = os.Stderr
@@ -452,23 +452,20 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
+					var command string
+
 					// Check for TTY
 					if terminal.IsTerminal(int(os.Stdin.Fd())) { // We have TTY!
-						// Open 'more' stream of contents
-						cmd := exec.Command("more", tempFile.Name())
-						cmd.Stdout = os.Stdout
-						cmd.Stdin = os.Stdin
-						cmd.Stderr = os.Stderr
-						cmd.Run()
+						command = "more"
 					} else {
-						// Open 'cat' stream of contents
-						cmd := exec.Command("cat", tempFile.Name())
-						cmd.Stdout = os.Stdout
-						cmd.Stdin = os.Stdin
-						cmd.Stderr = os.Stderr
-						cmd.Run()
+						command = "cat"
 					}
 
+					cmd := exec.Command(command, tempFile.Name())
+					cmd.Stdout = os.Stdout
+					cmd.Stdin = os.Stdin
+					cmd.Stderr = os.Stderr
+					cmd.Run()
 
 					// Close temp file
 					err = tempFile.Close()
@@ -638,4 +635,12 @@ func readVaultPassword() (password string, err error) {
 	}
 	password = string(bytePassword)
 	return
+}
+
+func getEditor() string {
+	var editorEnv = os.Getenv("EDITOR")
+	if editorEnv == "" {
+		return "vim"
+	}
+	return editorEnv
 }

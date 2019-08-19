@@ -452,8 +452,8 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
-					// Open 'more' stream of contents
-					cmd := exec.Command("more", tempFile.Name())
+					// Open 'cat' stream of contents
+					cmd := exec.Command("cat", tempFile.Name())
 					cmd.Stdout = os.Stdout
 					cmd.Stdin = os.Stdin
 					cmd.Stderr = os.Stderr

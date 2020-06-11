@@ -662,6 +662,12 @@ func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error
 }
 
 func retrieveVaultPassword(vaultPasswordFile string) (string, error) {
+	if vaultPasswordFile == "" {
+		// Not specified via CLI, check ANSIBLE_VAULT_PASSWORD_FILE environment variable
+		if os.Getenv("ANSIBLE_VAULT_PASSWORD_FILE") != "" {
+			vaultPasswordFile = os.Getenv("ANSIBLE_VAULT_PASSWORD_FILE")
+		}
+	}
 	if vaultPasswordFile != "" {
 		if _, err := os.Stat(vaultPasswordFile); os.IsNotExist(err) {
 			return "", errors.New("ERROR: vault-password-file, could not find: " + vaultPasswordFile)

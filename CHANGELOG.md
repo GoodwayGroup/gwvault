@@ -2,6 +2,18 @@
 ## [Unreleased]
 
 
+<a name="1.4.0"></a>
+## [1.4.0] - 2020-07-19
+### Chore
+- update .gitignore to exclude bin dir
+
+### DevOps
+- updated release process and changelog to git-chglog
+
+### Pull Requests
+- feat: Read ANSIBLE_VAULT_PASSWORD_FILE env variable if no password provided ([#9](https://github.com/GoodwayGroup/gwvault/issues/9))
+
+
 <a name="1.3.0"></a>
 ## [1.3.0] - 2019-08-19
 ### Pull Requests
@@ -34,7 +46,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/1.3.0...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/1.4.0...HEAD
+[1.4.0]: https://github.com/GoodwayGroup/gwvault/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/GoodwayGroup/gwvault/compare/1.2.1...1.3.0
 [1.2.1]: https://github.com/GoodwayGroup/gwvault/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/GoodwayGroup/gwvault/compare/1.1.0...1.2.0

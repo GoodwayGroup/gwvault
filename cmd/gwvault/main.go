@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -517,6 +518,55 @@ func main() {
 				return nil
 			},
 		},
+		{
+			Name:      "av_encrypt_string",
+			Usage:     "encrypt provided string, output in ansible-vault format",
+			UsageText: "[options] string_to_encrypt",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "vault-password-file",
+					Usage: "vault password file `VAULT_PASSWORD_FILE`",
+				},
+				cli.StringFlag{
+					Name:  "name",
+					Usage: "variable name to encrypt",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				vaultPassword := c.String("vault-password-file")
+				variableName := c.String("name")
+				// Validate CLI args
+				strToEncrypt, err := validateAndGetStringToEncrypt(c)
+				if err != nil {
+					return err
+				}
+
+				pw, err := retrieveVaultPassword(vaultPassword)
+				if err != nil {
+					return cli.NewExitError(err, 2)
+				}
+
+				// Encrypt
+				result, err := avtool.Encrypt(strToEncrypt, pw)
+				if err != nil {
+					return cli.NewExitError(err, 2)
+				}
+				if variableName == "" {
+					fmt.Println("!vault |")
+				} else {
+					fmt.Println(variableName + ": !vault |")
+
+				}
+				r := strings.Split(result, "\n")
+				for _, stringLine := range r {
+					fmt.Println("        " + stringLine)
+				}
+
+				println("Encryption successful")
+
+				return nil
+			},
+		},
 	}
 	app.Run(os.Args)
 }
@@ -612,6 +662,12 @@ func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error
 }
 
 func retrieveVaultPassword(vaultPasswordFile string) (string, error) {
+	if vaultPasswordFile == "" {
+		// Not specified via CLI, check ANSIBLE_VAULT_PASSWORD_FILE environment variable
+		if os.Getenv("ANSIBLE_VAULT_PASSWORD_FILE") != "" {
+			vaultPasswordFile = os.Getenv("ANSIBLE_VAULT_PASSWORD_FILE")
+		}
+	}
 	if vaultPasswordFile != "" {
 		if _, err := os.Stat(vaultPasswordFile); os.IsNotExist(err) {
 			return "", errors.New("ERROR: vault-password-file, could not find: " + vaultPasswordFile)

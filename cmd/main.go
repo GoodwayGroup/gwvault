@@ -21,6 +21,10 @@ var (
 	kdec    = k.Extend("decrypt")
 	kedit   = k.Extend("edit")
 	ke      = k.Extend("editor")
+	krk     = k.Extend("rekey")
+	kcre    = k.Extend("create")
+	kview   = k.Extend("view")
+	kencs   = k.Extend("encrypt_string")
 	kencf   = k.Extend("encryptFile")
 	kdecf   = k.Extend("decryptFile")
 	ktf     = k.Extend("createTempFile")
@@ -126,14 +130,14 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
-					// Write decrypted contents to temp file
+					// Write decrypted inputs to temp file
 					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}
 
 					// Move temp file to old file
-					kdec.Printf("overwriting contents %s -> %s", tempFile.Name(), file)
+					kdec.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					err = os.Rename(tempFile.Name(), file)
 					if err != nil {
 						return cli.NewExitError(err, 1)
@@ -161,7 +165,6 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				kedit.Println("start")
 				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
 					return cli.NewExitError(err, 2)
@@ -190,7 +193,7 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
-					// Write decrypted contents to temp file
+					// Write decrypted inputs to temp file
 					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.NewExitError(err, 1)
@@ -213,7 +216,7 @@ func main() {
 					}
 
 					// Move temp file to old file
-					kedit.Printf("overwriting contents %s -> %s", tempFile.Name(), file)
+					kedit.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					err = os.Rename(tempFile.Name(), file)
 					if err != nil {
 						return cli.NewExitError(err, 1)
@@ -257,6 +260,7 @@ func main() {
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
+				krk.Println("retrieved old password")
 
 				// Get New Vault password
 				newVaultPassword := c.String("new-vault-password-file")
@@ -265,8 +269,10 @@ func main() {
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
+				krk.Println("retrieved new password")
 
 				if newVaultPassword == "" {
+					krk.Println("confirming new password")
 					var confirmPw string
 					confirmPw, err = retrieveVaultPassword("", "Confirm New Vault password:")
 					if err != nil {
@@ -276,10 +282,13 @@ func main() {
 					if newPw != confirmPw {
 						return cli.NewExitError(errors.New("ERROR! Passwords do not match"), 2)
 					}
+					krk.Println("new password confirmed")
 				}
 
 				// Decrypt
+				krk.Printf("processing %d files. %# v", len(vaultFileNames), vaultFileNames)
 				for _, file := range vaultFileNames {
+					krk.Printf("processing: %s", file)
 					result, err := decryptFile(file, pw)
 					if err != nil {
 						return cli.NewExitError(err, 1)
@@ -292,7 +301,7 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
-					// Write decrypted contents to temp file
+					// Write decrypted inputs to temp file
 					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.NewExitError(err, 1)
@@ -309,6 +318,7 @@ func main() {
 					}
 
 					// Move temp file to old file
+					krk.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					err = os.Rename(tempFile.Name(), file)
 					if err != nil {
 						return cli.NewExitError(err, 1)
@@ -349,38 +359,29 @@ func main() {
 					return cli.NewExitError(err, 2)
 				}
 
-				// Create a new temp file
-				var tempFile *os.File
-				tempFile, err = createTempFile()
-				if err != nil {
-					return cli.NewExitError(err, 1)
+				// Open editor to get input
+				var input string
+				prompt := &survey.Editor{
+					Message: "Open editor to create file?",
 				}
 
-				// Open temp file for edit
-				cmd := exec.Command(getEditor(), tempFile.Name())
-				cmd.Stdout = os.Stdout
-				cmd.Stdin = os.Stdin
-				cmd.Stderr = os.Stderr
-				err = cmd.Run()
+				kcre.Println("opening editor")
+				err = survey.AskOne(prompt, &input)
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
 
-				// Encrypt temp file
-				result, err := avtool.EncryptFile(tempFile.Name(), pw)
+				kcre.Printf("encrypting input of length: %d", len(input))
+				var result string
+				result, err = avtool.Encrypt(input, pw)
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
 
-				// Write encrypted content to new file location
+				// Write encrypted input to new file location
 				err = ioutil.WriteFile(vaultFileName, []byte(result), 0644)
 				if err != nil {
 					return cli.NewExitError(err, 2)
-				}
-
-				err = cleanupFile(tempFile)
-				if err != nil {
-					return cli.NewExitError(err, 1)
 				}
 
 				println("Vault file created")
@@ -390,7 +391,7 @@ func main() {
 		},
 		{
 			Name:      "view",
-			Usage:     "view contents of encrypted file",
+			Usage:     "view inputs of encrypted file",
 			UsageText: "[options] [vaultfile.yml]",
 			Flags: []cli.Flag{
 				cli.StringFlag{
@@ -413,7 +414,9 @@ func main() {
 				}
 
 				// Decrypt
+				kview.Printf("processing %d files. %# v", len(vaultFileNames), vaultFileNames)
 				for _, file := range vaultFileNames {
+					kview.Printf("processing: %s", file)
 					result, err := decryptFile(file, pw)
 					if err != nil {
 						return cli.NewExitError(err, 1)
@@ -431,9 +434,8 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
-					var command string
-
 					// Check for TTY
+					var command string
 					if terminal.IsTerminal(int(os.Stdin.Fd())) { // We have TTY!
 						command = "less" // pick less to allow for search and other niceties
 					} else {
@@ -489,6 +491,7 @@ func main() {
 				}
 
 				// Encrypt
+				kencs.Printf("encrypting string of length: %d", len(strToEncrypt))
 				var result string
 				result, err = avtool.Encrypt(strToEncrypt, pw)
 				if err != nil {
@@ -573,7 +576,7 @@ func encryptFile(file string, pw string) error {
 	}
 	kencf.Printf("encryption successful: %s", file)
 
-	kencf.Printf("writing out encrypted contents: %s", file)
+	kencf.Printf("writing out encrypted inputs: %s", file)
 	err = ioutil.WriteFile(file, []byte(result), 0644)
 	if err != nil {
 		return err
@@ -582,6 +585,7 @@ func encryptFile(file string, pw string) error {
 }
 
 func validateCommandArgs(c *cli.Context) error {
+	k.Println("validateCommandArgs - start")
 	if !c.Args().Present() {
 		_ = cli.ShowSubcommandHelp(c)
 		return errors.New("ERROR: no valid files provided")
@@ -590,6 +594,7 @@ func validateCommandArgs(c *cli.Context) error {
 }
 
 func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
+	k.Println("validateAndGetVaultFile - start")
 	// Validate CLI args
 	err = validateCommandArgs(c)
 	if err != nil {
@@ -608,23 +613,23 @@ func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
 		if fileInfo, err := os.Stat(filename); os.IsNotExist(err) {
 			warnings = append(warnings, "WARN: skipping file "+filename+" because it does not exist")
 			continue
-		} else {
-			if fileInfo.IsDir() {
-				warnings = append(warnings, "WARN: skipping file "+filename+" because it is a directory")
-				continue
-			}
+		} else if fileInfo.IsDir() {
+			warnings = append(warnings, "WARN: skipping file "+filename+" because it is a directory")
+			continue
 		}
 
 		files = append(files, filename)
 	}
 
+	k.Printf("validateAndGetVaultFile - found %d warnings", len(warnings))
 	if len(warnings) > 0 {
 		for i := 0; i < len(warnings); i++ {
 			println(warnings[i])
 		}
 	}
 
-	if len(files) <= 0 {
+	k.Printf("validateAndGetVaultFile - found %d files", len(files))
+	if len(files) == 0 {
 		_ = cli.ShowSubcommandHelp(c)
 		return files, errors.New("ERROR: No supported files found")
 	}
@@ -633,6 +638,7 @@ func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
 }
 
 func validateAndGetStringToEncrypt(c *cli.Context) (strToEncrypt string, err error) {
+	k.Println("validateAndGetStringToEncrypt - start")
 	if c.NArg() <= 0 {
 		prompt := &survey.Editor{
 			Message: "Open editor to input string to encrypt",
@@ -653,6 +659,7 @@ func validateAndGetStringToEncrypt(c *cli.Context) (strToEncrypt string, err err
 }
 
 func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error) {
+	k.Println("validateAndGetVaultFileToCreate - start")
 	// Validate CLI args
 	err = validateCommandArgs(c)
 	if err != nil {
@@ -668,27 +675,31 @@ func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error
 	if filename == "" {
 		_ = cli.ShowSubcommandHelp(c)
 		return filename, errors.New("ERROR: filename not specified")
-	} else {
-		if fileInfo, err := os.Stat(filename); os.IsNotExist(err) {
-			// File does not exist, good to go
-			return filename, nil
-		} else {
-			if fileInfo.IsDir() {
-				_ = cli.ShowSubcommandHelp(c)
-				return filename, errors.New("ERROR: file " + filename + " is a directory")
-			}
-			return filename, errors.New("ERROR: file " + filename + " already exists")
-		}
 	}
+
+	fileInfo, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		// File does not exist, good to go
+		return filename, nil
+	}
+
+	if fileInfo.IsDir() {
+		_ = cli.ShowSubcommandHelp(c)
+		return filename, errors.New("ERROR: file " + filename + " is a directory")
+	}
+	return filename, errors.New("ERROR: file " + filename + " already exists")
 }
 
 func retrieveVaultPassword(vaultPasswordFile string, msg string) (string, error) {
+	k.Println("retrieveVaultPassword - start")
 	if vaultPasswordFile == "" {
 		// Not specified via CLI, check ANSIBLE_VAULT_PASSWORD_FILE environment variable
 		if os.Getenv("ANSIBLE_VAULT_PASSWORD_FILE") != "" {
 			vaultPasswordFile = os.Getenv("ANSIBLE_VAULT_PASSWORD_FILE")
+			k.Println("retrieveVaultPassword - using ANSIBLE_VAULT_PASSWORD_FILE: %s", vaultPasswordFile)
 		}
 	}
+
 	if vaultPasswordFile != "" {
 		if _, err := os.Stat(vaultPasswordFile); os.IsNotExist(err) {
 			return "", errors.New("ERROR: vault-password-file, could not find: " + vaultPasswordFile)
@@ -700,7 +711,11 @@ func retrieveVaultPassword(vaultPasswordFile string, msg string) (string, error)
 		return strings.TrimSpace(string(pw)), nil
 	}
 
-	return readVaultPassword(msg)
+	pw, err := readVaultPassword(msg)
+	if err != nil {
+		return "", err
+	}
+	return pw, err
 }
 
 func readVaultPassword(msg string) (password string, err error) {
@@ -708,7 +723,7 @@ func readVaultPassword(msg string) (password string, err error) {
 		Message: msg,
 	}
 	err = survey.AskOne(prompt, &password)
-	return password, nil
+	return password, err
 }
 
 func getEditor() string {

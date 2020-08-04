@@ -9,6 +9,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/clok/kemba"
 	"github.com/pbthorste/avtool"
 	"golang.org/x/crypto/ssh/terminal"
@@ -67,7 +68,7 @@ func main() {
 				// Get Vault Password
 				vaultPassword := c.String("vault-password-file")
 				var pw string
-				pw, err = retrieveVaultPassword(vaultPassword)
+				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
@@ -106,7 +107,7 @@ func main() {
 				// Get Vault Password
 				vaultPassword := c.String("vault-password-file")
 				var pw string
-				pw, err = retrieveVaultPassword(vaultPassword)
+				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
@@ -171,7 +172,7 @@ func main() {
 				// Get Vault Password
 				vaultPassword := c.String("vault-password-file")
 				var pw string
-				pw, err = retrieveVaultPassword(vaultPassword)
+				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
@@ -254,7 +255,7 @@ func main() {
 				// Get Vault Password
 				vaultPassword := c.String("vault-password-file")
 				var pw string
-				pw, err = retrieveVaultPassword(vaultPassword)
+				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
@@ -262,9 +263,21 @@ func main() {
 				// Get New Vault password
 				newVaultPassword := c.String("new-vault-password-file")
 				var newPw string
-				newPw, err = retrieveVaultPassword(newVaultPassword)
+				newPw, err = retrieveVaultPassword(newVaultPassword, "New Vault password:")
 				if err != nil {
 					return cli.NewExitError(err, 2)
+				}
+
+				if newVaultPassword == "" {
+					var confirmPw string
+					confirmPw, err = retrieveVaultPassword("", "Confirm New Vault password:")
+					if err != nil {
+						return cli.NewExitError(err, 2)
+					}
+
+					if newPw != confirmPw {
+						return cli.NewExitError(errors.New("ERROR! Passwords do not match"), 2)
+					}
 				}
 
 				// Decrypt
@@ -309,7 +322,7 @@ func main() {
 					}
 				}
 
-				println("Vault file edited")
+				println("Rekey successful")
 
 				return nil
 			},
@@ -333,7 +346,7 @@ func main() {
 				// Get Vault Password
 				vaultPassword := c.String("vault-password-file")
 				var pw string
-				pw, err = retrieveVaultPassword(vaultPassword)
+				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
@@ -396,7 +409,7 @@ func main() {
 				// Get Vault Password
 				vaultPassword := c.String("vault-password-file")
 				var pw string
-				pw, err = retrieveVaultPassword(vaultPassword)
+				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
@@ -446,43 +459,7 @@ func main() {
 		},
 		{
 			Name:      "encrypt_string",
-			Usage:     "encrypt provided string",
-			UsageText: "[options] string_to_encrypt",
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "vault-password-file",
-					Usage: "vault password file `VAULT_PASSWORD_FILE`",
-				},
-			},
-			Action: func(c *cli.Context) error {
-				// Validate CLI args
-				strToEncrypt, err := validateAndGetStringToEncrypt(c)
-				if err != nil {
-					return cli.NewExitError(err, 2)
-				}
-
-				vaultPassword := c.String("vault-password-file")
-				var pw string
-				pw, err = retrieveVaultPassword(vaultPassword)
-				if err != nil {
-					return cli.NewExitError(err, 2)
-				}
-
-				// Encrypt
-				var result string
-				result, err = avtool.Encrypt(strToEncrypt, pw)
-				if err != nil {
-					return cli.NewExitError(err, 2)
-				}
-				println(result)
-
-				println("Encryption successful")
-
-				return nil
-			},
-		},
-		{
-			Name:      "av_encrypt_string",
+			Aliases:   []string{"av_encrypt_string"},
 			Usage:     "encrypt provided string, output in ansible-vault format",
 			UsageText: "[options] string_to_encrypt",
 			Flags: []cli.Flag{
@@ -499,18 +476,19 @@ func main() {
 				// Validate CLI args
 				strToEncrypt, err := validateAndGetStringToEncrypt(c)
 				if err != nil {
-					return err
+					return cli.NewExitError(err, 2)
 				}
 
 				vaultPassword := c.String("vault-password-file")
 				var pw string
-				pw, err = retrieveVaultPassword(vaultPassword)
+				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
 
 				// Encrypt
-				result, err := avtool.Encrypt(strToEncrypt, pw)
+				var result string
+				result, err = avtool.Encrypt(strToEncrypt, pw)
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
@@ -520,12 +498,11 @@ func main() {
 					fmt.Println("!vault |")
 				} else {
 					fmt.Println(variableName + ": !vault |")
-
 				}
 
 				r := strings.Split(result, "\n")
 				for _, stringLine := range r {
-					fmt.Println("        " + stringLine)
+					fmt.Println("          " + stringLine)
 				}
 
 				println("Encryption successful")
@@ -698,7 +675,7 @@ func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error
 	}
 }
 
-func retrieveVaultPassword(vaultPasswordFile string) (string, error) {
+func retrieveVaultPassword(vaultPasswordFile string, msg string) (string, error) {
 	if vaultPasswordFile == "" {
 		// Not specified via CLI, check ANSIBLE_VAULT_PASSWORD_FILE environment variable
 		if os.Getenv("ANSIBLE_VAULT_PASSWORD_FILE") != "" {
@@ -716,18 +693,15 @@ func retrieveVaultPassword(vaultPasswordFile string) (string, error) {
 		return strings.TrimSpace(string(pw)), nil
 	}
 
-	return readVaultPassword()
+	return readVaultPassword(msg)
 }
 
-func readVaultPassword() (password string, err error) {
-	println("Vault password: ")
-	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
-	if err != nil {
-		err = errors.New("ERROR: could not input password, " + err.Error())
-		return
+func readVaultPassword(msg string) (password string, err error) {
+	prompt := &survey.Password{
+		Message: msg,
 	}
-	password = string(bytePassword)
-	return
+	err = survey.AskOne(prompt, &password)
+	return password, nil
 }
 
 func getEditor() string {

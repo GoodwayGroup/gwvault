@@ -2,6 +2,18 @@
 ## [Unreleased]
 
 
+<a name="v1.5.0"></a>
+## [v1.5.0] - 2020-08-04
+### Chore
+- remove benchmark results html to decrease bloat
+
+### Features
+- **release:** 1.4.0
+
+### Pull Requests
+- feat(modernize): support go.mod, cleaned up code, brought in line with current ansible-vault ([#10](https://github.com/GoodwayGroup/gwvault/issues/10))
+
+
 <a name="1.4.0"></a>
 ## [1.4.0] - 2020-07-19
 ### Chore
@@ -46,7 +58,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/1.4.0...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.5.0...HEAD
+[v1.5.0]: https://github.com/GoodwayGroup/gwvault/compare/1.4.0...v1.5.0
 [1.4.0]: https://github.com/GoodwayGroup/gwvault/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/GoodwayGroup/gwvault/compare/1.2.1...1.3.0
 [1.2.1]: https://github.com/GoodwayGroup/gwvault/compare/1.2.0...1.2.1

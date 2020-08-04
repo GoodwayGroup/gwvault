@@ -55,7 +55,7 @@ As compared to `ansible-vault` (v2.9.11 on python v3.8.5), typical actions take 
 | encrypt_string | 429 ms | **64 ms** |
 | encrypt + decrypt | 1,087 ms | **168 ms** |
 
-See [`./benchmark/results.html`](https://raw.githubusercontent.com/GoodwayGroup/gwvault/master/benchmark/results.html) for a detailed breakdown of the results.
+See [`./benchmark/results.html`](./benchmark/results.html) for a detailed breakdown of the results after running the benchmark.
 
 ## Built With
 

@@ -24,7 +24,8 @@ var (
 	ke      = k.Extend("editor")
 	kencf   = k.Extend("encryptFile")
 	kdecf   = k.Extend("decryptFile")
-	ktmp    = k.Extend("createTempFile")
+	ktf     = k.Extend("createTempFile")
+	kclean  = k.Extend("cleanupFile")
 )
 
 // OG: [create|decrypt|edit|encrypt|encrypt_string|rekey|view] [options] [vaultfile.yml]
@@ -139,12 +140,10 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
-					// Close file
-					err = tempFile.Close()
+					err = cleanupFile(tempFile)
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}
-					kdec.Printf("temp file cleaned up: %s", tempFile.Name())
 				}
 
 				println("Decryption successful")
@@ -221,12 +220,10 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
-					// Close file
-					err = tempFile.Close()
+					err = cleanupFile(tempFile)
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}
-					kedit.Printf("temp file cleaned up: %s", tempFile.Name())
 				}
 
 				println("Vault file edited")
@@ -306,8 +303,7 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
-					// Close file
-					err = tempFile.Close()
+					err = cleanupFile(tempFile)
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}
@@ -371,16 +367,9 @@ func main() {
 					return cli.NewExitError(err, 2)
 				}
 
-				// Close temp file
-				err = tempFile.Close()
+				err = cleanupFile(tempFile)
 				if err != nil {
-					return cli.NewExitError(err, 2)
-				}
-
-				// Delete the temp file
-				err = os.Remove(tempFile.Name())
-				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.NewExitError(err, 1)
 				}
 
 				println("Vault file created")
@@ -446,14 +435,7 @@ func main() {
 					cmd.Stderr = os.Stderr
 					cmd.Run()
 
-					// Close temp file
-					err = tempFile.Close()
-					if err != nil {
-						return cli.NewExitError(err, 1)
-					}
-
-					// Delete the temp file
-					err = os.Remove(tempFile.Name())
+					err = cleanupFile(tempFile)
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}
@@ -556,12 +538,35 @@ func main() {
 }
 
 func createTempFile() (*os.File, error) {
-	tempFile, err := ioutil.TempFile("", "vault")
+	t, err := ioutil.TempFile("", "vault")
 	if err != nil {
 		return nil, err
 	}
-	ktmp.Printf("created temp file: %s", tempFile.Name())
-	return tempFile, nil
+	ktf.Printf("created temp file: %s", t.Name())
+	return t, nil
+}
+
+func cleanupFile(t *os.File) error {
+	kclean.Printf("deleting file: %s", t.Name())
+	// Close temp file
+	err := t.Close()
+	if err != nil {
+		return err
+	}
+
+	_, err = os.Stat(t.Name())
+	if os.IsNotExist(err) {
+		kclean.Printf("skipping - file no longer exists: %s", t.Name())
+		return nil
+	}
+
+	// Delete the temp file
+	err = os.Remove(t.Name())
+	if err != nil {
+		return err
+	}
+	kclean.Printf("delete complete: %s", t.Name())
+	return nil
 }
 
 func decryptFile(file string, pw string) (string, error) {
@@ -596,7 +601,7 @@ func encryptFile(file string, pw string) error {
 func validateCommandArgs(c *cli.Context) error {
 	if !c.Args().Present() {
 		cli.ShowSubcommandHelp(c)
-		return cli.NewExitError(errors.New("ERROR: no valid files provided"), 2)
+		return errors.New("ERROR: no valid files provided")
 	}
 	return nil
 }
@@ -611,7 +616,7 @@ func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
 	var warnings []string
 	if c.NArg() <= 0 {
 		cli.ShowSubcommandHelp(c)
-		return files, cli.NewExitError(errors.New("ERROR: no vaild files provided"), 2)
+		return files, errors.New("ERROR: no vaild files provided")
 	}
 
 	for i := 0; i < c.NArg(); i++ {
@@ -638,7 +643,7 @@ func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
 
 	if len(files) <= 0 {
 		cli.ShowSubcommandHelp(c)
-		return files, cli.NewExitError(errors.New("ERROR: No supported files found"), 2)
+		return files, errors.New("ERROR: No supported files found")
 	}
 
 	return files, nil

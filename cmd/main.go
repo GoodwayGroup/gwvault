@@ -3,17 +3,15 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"os"
-	"os/exec"
-	"strings"
-	"syscall"
-
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/clok/kemba"
 	"github.com/pbthorste/avtool"
 	"golang.org/x/crypto/ssh/terminal"
 	"gopkg.in/urfave/cli.v1"
+	"io/ioutil"
+	"os"
+	"os/exec"
+	"strings"
 )
 
 var (
@@ -446,7 +444,10 @@ func main() {
 					cmd.Stdout = os.Stdout
 					cmd.Stdin = os.Stdin
 					cmd.Stderr = os.Stderr
-					cmd.Run()
+					err = cmd.Run()
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
 
 					err = cleanupFile(tempFile)
 					if err != nil {
@@ -473,15 +474,16 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				// Validate CLI args
-				strToEncrypt, err := validateAndGetStringToEncrypt(c)
+				var pw string
+				var err error
+				vaultPassword := c.String("vault-password-file")
+				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
 
-				vaultPassword := c.String("vault-password-file")
-				var pw string
-				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
+				var strToEncrypt string
+				strToEncrypt, err = validateAndGetStringToEncrypt(c)
 				if err != nil {
 					return cli.NewExitError(err, 2)
 				}
@@ -511,7 +513,11 @@ func main() {
 			},
 		},
 	}
-	app.Run(os.Args)
+
+	err := app.Run(os.Args)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func createTempFile() (*os.File, error) {
@@ -577,7 +583,7 @@ func encryptFile(file string, pw string) error {
 
 func validateCommandArgs(c *cli.Context) error {
 	if !c.Args().Present() {
-		cli.ShowSubcommandHelp(c)
+		_ = cli.ShowSubcommandHelp(c)
 		return errors.New("ERROR: no valid files provided")
 	}
 	return nil
@@ -592,8 +598,8 @@ func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
 
 	var warnings []string
 	if c.NArg() <= 0 {
-		cli.ShowSubcommandHelp(c)
-		return files, errors.New("ERROR: no vaild files provided")
+		_ = cli.ShowSubcommandHelp(c)
+		return files, errors.New("ERROR: no valid files provided")
 	}
 
 	for i := 0; i < c.NArg(); i++ {
@@ -619,7 +625,7 @@ func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
 	}
 
 	if len(files) <= 0 {
-		cli.ShowSubcommandHelp(c)
+		_ = cli.ShowSubcommandHelp(c)
 		return files, errors.New("ERROR: No supported files found")
 	}
 
@@ -628,15 +634,16 @@ func validateAndGetVaultFile(c *cli.Context) (files []string, err error) {
 
 func validateAndGetStringToEncrypt(c *cli.Context) (strToEncrypt string, err error) {
 	if c.NArg() <= 0 {
-		println("String to encrypt: ")
-		byteInput, err2 := terminal.ReadPassword(int(syscall.Stdin))
-		if err2 != nil {
-			err2 = errors.New("ERROR: could not input string, " + err2.Error())
-			return
+		prompt := &survey.Editor{
+			Message: "Open editor to input string to encrypt",
 		}
-		strToEncrypt = string(byteInput)
 
-		cli.ShowSubcommandHelp(c)
+		err = survey.AskOne(prompt, &strToEncrypt)
+		if err != nil {
+			_ = cli.ShowSubcommandHelp(c)
+			return "", err
+		}
+
 		return strToEncrypt, nil
 	}
 
@@ -653,13 +660,13 @@ func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error
 	}
 
 	if c.NArg() > 1 {
-		cli.ShowSubcommandHelp(c)
+		_ = cli.ShowSubcommandHelp(c)
 		return filename, errors.New("ERROR: can only create one vault file at a time")
 	}
 
 	filename = strings.TrimSpace(c.Args().First())
 	if filename == "" {
-		cli.ShowSubcommandHelp(c)
+		_ = cli.ShowSubcommandHelp(c)
 		return filename, errors.New("ERROR: filename not specified")
 	} else {
 		if fileInfo, err := os.Stat(filename); os.IsNotExist(err) {
@@ -667,7 +674,7 @@ func validateAndGetVaultFileToCreate(c *cli.Context) (filename string, err error
 			return filename, nil
 		} else {
 			if fileInfo.IsDir() {
-				cli.ShowSubcommandHelp(c)
+				_ = cli.ShowSubcommandHelp(c)
 				return filename, errors.New("ERROR: file " + filename + " is a directory")
 			}
 			return filename, errors.New("ERROR: file " + filename + " already exists")

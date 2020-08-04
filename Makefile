@@ -13,7 +13,7 @@ build:
 	@mkdir -p bin/
 	go get -t ./...
 	go test -v ./...
-	go build ${LDFLAGS} -o bin/${NAME} cmd/gwvault/main.go
+	go build ${LDFLAGS} -o bin/${NAME} cmd/main.go
 
 xbuild: clean
 	@mkdir -p build
@@ -23,7 +23,7 @@ xbuild: clean
 		-os="darwin" \
 		-arch="amd64" \
 		${LDFLAGS} \
-		-output="build/{{.Dir}}_$(VERSION)_{{.OS}}_{{.Arch}}/$(NAME)" \
+		-output="build/$(NAME)_$(VERSION)_{{.OS}}_{{.Arch}}/$(NAME)" \
 		./...
 
 package: xbuild

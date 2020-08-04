@@ -78,7 +78,7 @@ We employ [git-chglog](https://github.com/git-chglog/git-chglog) to manage the [
 ## Authors
 
 * **Derek Smith** - [@clok](https://github.com/clok)
-* **Paulo Black** - [@clok](https://github.com/paulojblack)
+* **Paulo Black** - [@paulojblack](https://github.com/paulojblack)
 
 See also the list of [contributors](https://github.com/GoodwayGroup/gwvault/contributors) who participated in this project.
 

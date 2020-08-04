@@ -11,7 +11,7 @@ gwvaultPath=''
 
 export GWVAULT_PATH="${gwvaultPath}"
 
-echo 'aStr0ngP455w0rd!' > ./vault.pw
+echo 'aStr0ngP455w0rd!' >./vault.pw
 
 curl https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG-1.10.md --output bm.md --silent
 

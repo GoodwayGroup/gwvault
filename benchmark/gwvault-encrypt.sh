@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 if [ "x${GWVAULT_PATH}x" = "xx" ]; then
-    echo "Please provide GWVAULT_PATH"
-    exit 1
+  echo "Please provide GWVAULT_PATH"
+  exit 1
 fi
 
 cp bm.enc bm.enc.back

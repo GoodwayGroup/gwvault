@@ -67,19 +67,23 @@ fi
 
 h1 "Preparing release of $VERSION"
 
+h2 "Updating CHANGELOG.md"
+git-chglog --next-tag $VERSION -o CHANGELOG.md && git add CHANGELOG.md
+git commit -m "feat(release): $VERSION"
+
 h2 "Tagging version: $VERSION"
 git tag $VERSION
-
-h2 "Updating CHANGELOG.md"
-git-chglog -o CHANGELOG.md && git add CHANGELOG.md
-git commit -m "feat(release): $VERSION"
 
 note "Building assets to be uploaded"
 make ci
 
+note "Pushing branch: git push origin $(git rev-parse --abbrev-ref HEAD)"
+git push origin $(git rev-parse --abbrev-ref HEAD)
+
+note "Pushing tag: git push origin $VERSION"
+git push origin $VERSION
+
 echo ""
 note "What you still need to do:"
-info "1. Push the tag: git push origin $VERSION"
-info "2. Update the release in github with compiled assets."
+info "1. Update the release in github with compiled assets."
 echo ""
-success "Done!"

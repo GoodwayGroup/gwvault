@@ -6,6 +6,8 @@
 
 ## Basic Usage
 
+Please see [the docs for details on the commands.](./docs/gwvault.md)
+
 Use in place of `ansible-vault`. All commands are reimplemented. The tool will default to asking for your Vault password.
 
 ```
@@ -17,20 +19,21 @@ USAGE:
    main [global options] command [command options] [arguments...]
 
 COMMANDS:
-     encrypt                            encrypt file
-     decrypt                            decrypt file
-     edit                               edit file and re-encrypt
-     rekey                              alter encryption password and re-encrypt
-     create                             create a new encrypted file
-     view                               view contents of encrypted file
-     encrypt_string, av_encrypt_string  encrypt provided string, output in ansible-vault format
-     help, h                            Shows a list of commands or help for one command
+   encrypt                            encrypt file
+   decrypt                            decrypt file
+   edit                               edit file and re-encrypt
+   rekey                              alter encryption password and re-encrypt
+   create                             create a new encrypted file
+   view                               view inputs of encrypted file
+   encrypt_string, av_encrypt_string  encrypt provided string, output in ansible-vault format
+   install-manpage                    Generate and install man page
+   version, v                         Print version info
+   help, h                            Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --vault-password-file VAULT_PASSWORD_FILE          vault password file VAULT_PASSWORD_FILE
    --new-vault-password-file NEW_VAULT_PASSWORD_FILE  new vault password file for rekey NEW_VAULT_PASSWORD_FILE
-   --help, -h                                         show help
-   --version, -v                                      print the version
+   --help, -h                                         show help (default: false)
 ```
 
 ## Installation

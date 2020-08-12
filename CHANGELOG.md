@@ -2,12 +2,23 @@
 ## [Unreleased]
 
 
+<a name="v1.6.0"></a>
+## [v1.6.0] - 2020-08-12
+### Chore
+- updated make and release process
+- **docs:** initial generation of docs
+
+### Features
+- **docs:** updated cli to v2, added in docs generation
+
+
 <a name="v1.5.0"></a>
 ## [v1.5.0] - 2020-08-04
 ### Chore
 - remove benchmark results html to decrease bloat
 
 ### Features
+- **release:** v1.5.0
 - **release:** 1.4.0
 
 ### Pull Requests
@@ -58,7 +69,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.6.0...HEAD
+[v1.6.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.5.0...v1.6.0
 [v1.5.0]: https://github.com/GoodwayGroup/gwvault/compare/1.4.0...v1.5.0
 [1.4.0]: https://github.com/GoodwayGroup/gwvault/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/GoodwayGroup/gwvault/compare/1.2.1...1.3.0

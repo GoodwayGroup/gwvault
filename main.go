@@ -4,13 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/GoodwayGroup/gwvault/info"
 	"github.com/clok/kemba"
 	"github.com/pbthorste/avtool"
+	"github.com/urfave/cli/v2"
 	"golang.org/x/crypto/ssh/terminal"
-	"gopkg.in/urfave/cli.v1"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 )
 
@@ -41,22 +43,22 @@ func main() {
 	app.Version = version
 	app.Usage = "encryption/decryption utility for Ansible data files"
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "vault-password-file",
 			Usage: "vault password file `VAULT_PASSWORD_FILE`",
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "new-vault-password-file",
 			Usage: "new vault password file for rekey `NEW_VAULT_PASSWORD_FILE`",
 		},
 	}
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:      "encrypt",
 			Usage:     "encrypt file",
 			UsageText: "[options] [vaultfile.yml]",
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "vault-password-file",
 					Usage: "vault password file `VAULT_PASSWORD_FILE`",
 				},
@@ -95,7 +97,7 @@ func main() {
 			Usage:     "decrypt file",
 			UsageText: "[options] [vaultfile.yml]",
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "vault-password-file",
 					Usage: "vault password file `VAULT_PASSWORD_FILE`",
 				},
@@ -159,7 +161,7 @@ func main() {
 			Usage:     "edit file and re-encrypt",
 			UsageText: "[options] [vaultfile.yml]",
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "vault-password-file",
 					Usage: "vault password file `VAULT_PASSWORD_FILE`",
 				},
@@ -238,11 +240,11 @@ func main() {
 			Usage:     "alter encryption password and re-encrypt",
 			UsageText: "[options] [vaultfile.yml] [newvaultfile.yml]",
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "vault-password-file",
 					Usage: "vault password file `VAULT_PASSWORD_FILE`",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "new-vault-password-file",
 					Usage: "new vault password file for rekey `NEW_VAULT_PASSWORD_FILE`",
 				},
@@ -340,7 +342,7 @@ func main() {
 			Usage:     "create a new encrypted file",
 			UsageText: "[options] [vaultfile.yml]",
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "vault-password-file",
 					Usage: "vault password file `VAULT_PASSWORD_FILE`",
 				},
@@ -394,7 +396,7 @@ func main() {
 			Usage:     "view inputs of encrypted file",
 			UsageText: "[options] [vaultfile.yml]",
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "vault-password-file",
 					Usage: "vault password file `VAULT_PASSWORD_FILE`",
 				},
@@ -466,11 +468,11 @@ func main() {
 			Usage:     "encrypt provided string, output in ansible-vault format",
 			UsageText: "[options] string_to_encrypt",
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "vault-password-file",
 					Usage: "vault password file `VAULT_PASSWORD_FILE`",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "name",
 					Usage: "variable name to encrypt",
 				},
@@ -515,6 +517,45 @@ func main() {
 				return nil
 			},
 		},
+		{
+			Name:  "install-manpage",
+			Usage: "Generate and install man page",
+			Action: func(c *cli.Context) error {
+				mp, _ := info.ToMan(c.App)
+				err := ioutil.WriteFile("/usr/local/share/man/man8/gwvault.8", []byte(mp), 0644)
+				if err != nil {
+					return cli.NewExitError(fmt.Sprintf("Unable to install man page: %e", err), 2)
+				}
+				return nil
+			},
+		},
+		{
+			Name:    "version",
+			Aliases: []string{"v"},
+			Usage:   "Print version info",
+			Action: func(c *cli.Context) error {
+				fmt.Printf("%s %s (%s/%s)\n", info.AppName, version, runtime.GOOS, runtime.GOARCH)
+				return nil
+			},
+		},
+	}
+
+	if os.Getenv("DOCS_MD") != "" {
+		docs, err := info.ToMarkdown(app)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(docs)
+		return
+	}
+
+	if os.Getenv("DOCS_MAN") != "" {
+		docs, err := info.ToMan(app)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(docs)
+		return
 	}
 
 	err := app.Run(os.Args)

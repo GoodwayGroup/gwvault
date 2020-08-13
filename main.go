@@ -6,10 +6,12 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/GoodwayGroup/gwvault/info"
 	"github.com/clok/kemba"
+	"github.com/clok/cdocs"
 	"github.com/pbthorste/avtool"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/crypto/ssh/terminal"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"runtime"
@@ -38,8 +40,16 @@ var (
 
 func main() {
 	k.Println("executing")
+
+	im, err := cdocs.InstallManpageCommand(&cdocs.InstallManpageCommandInput{
+		AppName: info.AppName,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	app := cli.NewApp()
-	app.Name = "gwvault"
+	app.Name = info.AppName
 	app.Version = version
 	app.Usage = "encryption/decryption utility for Ansible data files"
 	app.Flags = []cli.Flag{
@@ -517,18 +527,7 @@ func main() {
 				return nil
 			},
 		},
-		{
-			Name:  "install-manpage",
-			Usage: "Generate and install man page",
-			Action: func(c *cli.Context) error {
-				mp, _ := info.ToMan(c.App)
-				err := ioutil.WriteFile("/usr/local/share/man/man8/gwvault.8", []byte(mp), 0644)
-				if err != nil {
-					return cli.NewExitError(fmt.Sprintf("Unable to install man page: %e", err), 2)
-				}
-				return nil
-			},
-		},
+		im,
 		{
 			Name:    "version",
 			Aliases: []string{"v"},
@@ -541,7 +540,7 @@ func main() {
 	}
 
 	if os.Getenv("DOCS_MD") != "" {
-		docs, err := info.ToMarkdown(app)
+		docs, err := cdocs.ToMarkdown(app)
 		if err != nil {
 			panic(err)
 		}
@@ -550,7 +549,7 @@ func main() {
 	}
 
 	if os.Getenv("DOCS_MAN") != "" {
-		docs, err := info.ToMan(app)
+		docs, err := cdocs.ToMan(app)
 		if err != nil {
 			panic(err)
 		}
@@ -558,7 +557,7 @@ func main() {
 		return
 	}
 
-	err := app.Run(os.Args)
+	err = app.Run(os.Args)
 	if err != nil {
 		panic(err)
 	}

@@ -100,6 +100,8 @@ encrypt provided string, output in ansible-vault format
 
 Generate and install man page
 
+>NOTE: Windows is not supported
+
 ## version, v
 
 Print version info

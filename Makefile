@@ -8,7 +8,7 @@ LDFLAGS=-ldflags=all="-X main.version=${SHORT_VERSION}"
 all: tools build
 
 tools:
-	go get -u -v "github.com/mitchellh/gox"
+	GO111MODULE=off go get -u -v "github.com/mitchellh/gox"
 
 build:
 	@mkdir -p bin/

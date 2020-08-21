@@ -2,11 +2,26 @@
 ## [Unreleased]
 
 
+<a name="v1.7.1"></a>
+## [v1.7.1] - 2020-08-21
+### Chore
+- **deps:** update clok/kemba and clok/cdocs
+- **renovate:** clean up dupe config
+- **renovate:** add renovate.json
+
+### Pull Requests
+- chore(deps): update module alecaivazis/survey/v2 to v2.1.1 ([#12](https://github.com/GoodwayGroup/gwvault/issues/12))
+- chore(deps): add renovate.json ([#11](https://github.com/GoodwayGroup/gwvault/issues/11))
+
+
 <a name="v1.7.0"></a>
 ## [v1.7.0] - 2020-08-13
 ### Chore
 - update README.md
 - **docs:** updating docs for version v1.7.0
+
+### Features
+- **release:** v1.7.0
 
 ### Fest
 - **cdocs:** integrate cdocs library
@@ -80,7 +95,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.1...HEAD
+[v1.7.1]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.0...v1.7.1
 [v1.7.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.6.0...v1.7.0
 [v1.6.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.5.0...v1.6.0
 [v1.5.0]: https://github.com/GoodwayGroup/gwvault/compare/1.4.0...v1.5.0

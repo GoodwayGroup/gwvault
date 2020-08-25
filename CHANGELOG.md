@@ -2,12 +2,26 @@
 ## [Unreleased]
 
 
+<a name="v1.7.2"></a>
+## [v1.7.2] - 2020-08-25
+### Chore
+- updated release script to include publish to github
+- **make:** don't update go.mod with gox
+
+### Pull Requests
+- chore(deps): update module clok/kemba to v0.7.1 ([#16](https://github.com/GoodwayGroup/gwvault/issues/16))
+- chore(deps): update golang.org/x/crypto commit hash to 5c72a88 ([#13](https://github.com/GoodwayGroup/gwvault/issues/13))
+
+
 <a name="v1.7.1"></a>
 ## [v1.7.1] - 2020-08-21
 ### Chore
 - **deps:** update clok/kemba and clok/cdocs
 - **renovate:** clean up dupe config
 - **renovate:** add renovate.json
+
+### Features
+- **release:** v1.7.1
 
 ### Pull Requests
 - chore(deps): update module alecaivazis/survey/v2 to v2.1.1 ([#12](https://github.com/GoodwayGroup/gwvault/issues/12))
@@ -95,7 +109,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.1...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.2...HEAD
+[v1.7.2]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.1...v1.7.2
 [v1.7.1]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.0...v1.7.1
 [v1.7.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.6.0...v1.7.0
 [v1.6.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.5.0...v1.6.0

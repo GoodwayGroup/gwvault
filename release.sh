@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set +e
-set -o noglob
 
 #
 # Set Colors
@@ -93,7 +92,23 @@ git push origin $(git rev-parse --abbrev-ref HEAD)
 note "Pushing tag: git push origin $VERSION"
 git push origin $VERSION
 
-echo ""
-note "What you still need to do:"
-info "1. Update the release in github with compiled assets."
-echo ""
+if ! typeExists "github-release"; then
+  error "github-release is not installed"
+  note "To install run: go get -u github.com/github-release/github-release"
+
+  echo ""
+  note "What you still need to do:"
+  info "1. Update the release in github with compiled assets."
+  echo ""
+else
+  h1 "Creating Release in Github"
+  github-release release -u GoodwayGroup -r gwvault -t $VERSION
+
+  for FILE in build/tgz/*; do
+    asset_name="$(basename $FILE)"
+    info "Uploading build asset: ${asset_name}"
+    github-release upload -u GoodwayGroup -r gwvault -t $VERSION -n "$asset_name" -f $FILE
+  done
+
+  success "Done!"
+fi

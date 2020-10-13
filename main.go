@@ -148,6 +148,12 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
+					// Close temp file before rename to avoid issues on Windows
+					err = tempFile.Close()
+					if err != nil {
+						return err
+					}
+
 					// Move temp file to old file
 					kdec.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					err = os.Rename(tempFile.Name(), file)
@@ -225,6 +231,12 @@ func main() {
 					err = encryptFile(tempFile.Name(), pw)
 					if err != nil {
 						return cli.NewExitError(err, 2)
+					}
+
+					// Close temp file before rename to avoid issues on Windows
+					err = tempFile.Close()
+					if err != nil {
+						return err
 					}
 
 					// Move temp file to old file
@@ -327,6 +339,12 @@ func main() {
 					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.NewExitError(err, 1)
+					}
+
+					// Close temp file before rename to avoid issues on Windows
+					err = tempFile.Close()
+					if err != nil {
+						return err
 					}
 
 					// Move temp file to old file
@@ -463,6 +481,12 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 
+					// Close temp file before cleanup to avoid issues on Windows
+					err = tempFile.Close()
+					if err != nil {
+						return err
+					}
+
 					err = cleanupFile(tempFile)
 					if err != nil {
 						return cli.NewExitError(err, 1)
@@ -574,13 +598,8 @@ func createTempFile() (*os.File, error) {
 
 func cleanupFile(t *os.File) error {
 	kclean.Printf("deleting file: %s", t.Name())
-	// Close temp file
-	err := t.Close()
-	if err != nil {
-		return err
-	}
 
-	_, err = os.Stat(t.Name())
+	_, err := os.Stat(t.Name())
 	if os.IsNotExist(err) {
 		kclean.Printf("skipping - file no longer exists: %s", t.Name())
 		return nil

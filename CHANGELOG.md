@@ -2,8 +2,21 @@
 ## [Unreleased]
 
 
+<a name="v1.8.1"></a>
+## [v1.8.1] - 2020-10-28
+### Bug Fixes
+- **file rename:** deprecate use of os.Rename in favor of ioutil.WriteFile
+
+### Pull Requests
+- fix(file rename): Overwrite original file rather than use Rename ([#21](https://github.com/GoodwayGroup/gwvault/issues/21))
+- chore(deps): update golang.org/x/crypto commit hash to 9e8e0b3 ([#19](https://github.com/GoodwayGroup/gwvault/issues/19))
+
+
 <a name="v1.8.0"></a>
 ## [v1.8.0] - 2020-10-13
+### Features
+- **release:** v1.8.0
+
 ### Pull Requests
 - chore(deps): update golang.org/x/crypto commit hash to 84dcc77 ([#17](https://github.com/GoodwayGroup/gwvault/issues/17))
 - fix(windows) Fix Windows specific issue: Can't rename open files ([#18](https://github.com/GoodwayGroup/gwvault/issues/18))
@@ -119,7 +132,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.1...HEAD
+[v1.8.1]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.0...v1.8.1
 [v1.8.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.2...v1.8.0
 [v1.7.2]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.1...v1.7.2
 [v1.7.1]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.0...v1.7.1

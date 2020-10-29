@@ -156,7 +156,14 @@ func main() {
 
 					// Move temp file to old file
 					kdec.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
-					err = os.Rename(tempFile.Name(), file)
+					var decrypted_contents []byte
+					decrypted_contents, err = ioutil.ReadFile(tempFile.Name())
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
+
+					err = ioutil.WriteFile(file, decrypted_contents, 0644)
+
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}

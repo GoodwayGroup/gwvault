@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/GoodwayGroup/gwvault/info"
-	"github.com/clok/kemba"
 	"github.com/clok/cdocs"
+	"github.com/clok/kemba"
 	"github.com/pbthorste/avtool"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/crypto/ssh/terminal"
@@ -156,13 +156,13 @@ func main() {
 
 					// Move temp file to old file
 					kdec.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
-					var decrypted_contents []byte
-					decrypted_contents, err = ioutil.ReadFile(tempFile.Name())
+					var decryptedContents []byte
+					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}
 
-					err = ioutil.WriteFile(file, decrypted_contents, 0644)
+					err = ioutil.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
 						return cli.NewExitError(err, 1)
@@ -248,7 +248,14 @@ func main() {
 
 					// Move temp file to old file
 					kedit.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
-					err = os.Rename(tempFile.Name(), file)
+					var decryptedContents []byte
+					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
+
+					err = ioutil.WriteFile(file, decryptedContents, 0644)
+
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}
@@ -356,7 +363,14 @@ func main() {
 
 					// Move temp file to old file
 					krk.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
-					err = os.Rename(tempFile.Name(), file)
+					var decryptedContents []byte
+					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
+
+					err = ioutil.WriteFile(file, decryptedContents, 0644)
+
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}

@@ -42,6 +42,27 @@ GLOBAL OPTIONS:
 $ curl https://i.jpillora.com/GoodwayGroup/gwvault! | bash
 ```
 
+### [`asdf` plugin](https://github.com/GoodwayGroup/asdf-gwvault)
+
+Add plugin:
+
+```
+$ asdf plugin-add gwvault https://github.com/GoodwayGroup/asdf-gwvault.git
+```
+
+Install the latest version:
+```
+$ asdf install gwvault latest
+```
+
+### man page
+
+To install `man` page:
+
+```
+$ gwvault install-manpage
+```
+
 ## Benchmarks
 
 Benchmarking done using [`bench`](https://github.com/Gabriel439/bench). Execute the `benchmark/run.sh` script to generate a new benchmark.

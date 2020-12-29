@@ -76,7 +76,7 @@ func main() {
 			Action: func(c *cli.Context) error {
 				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Get Vault Password
@@ -84,7 +84,7 @@ func main() {
 				var pw string
 				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Encrypt
@@ -93,7 +93,7 @@ func main() {
 					kenc.Printf("processing: %s", file)
 					err := encryptFile(file, pw)
 					if err != nil {
-						return cli.NewExitError(err, 2)
+						return cli.Exit(err, 2)
 					}
 				}
 
@@ -115,7 +115,7 @@ func main() {
 			Action: func(c *cli.Context) error {
 				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Get Vault Password
@@ -123,7 +123,7 @@ func main() {
 				var pw string
 				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Decrypt
@@ -132,20 +132,20 @@ func main() {
 					kdec.Printf("processing: %s", file)
 					result, err := decryptFile(file, pw)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Create a new temp file
 					var tempFile *os.File
 					tempFile, err = createTempFile()
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Write decrypted inputs to temp file
 					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Close temp file before rename to avoid issues on Windows
@@ -159,18 +159,18 @@ func main() {
 					var decryptedContents []byte
 					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					err = ioutil.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					err = cleanupFile(tempFile)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 				}
 
@@ -192,7 +192,7 @@ func main() {
 			Action: func(c *cli.Context) error {
 				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Get Vault Password
@@ -200,7 +200,7 @@ func main() {
 				var pw string
 				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				kedit.Printf("processing %d files. %# v", len(vaultFileNames), vaultFileNames)
@@ -208,20 +208,20 @@ func main() {
 					kedit.Printf("processing: %s", file)
 					result, err := decryptFile(file, pw)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Create a new temp file
 					var tempFile *os.File
 					tempFile, err = createTempFile()
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Write decrypted inputs to temp file
 					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Open editor for modifications
@@ -231,13 +231,13 @@ func main() {
 					cmd.Stderr = os.Stderr
 					err = cmd.Run()
 					if err != nil {
-						return cli.NewExitError(err, 2)
+						return cli.Exit(err, 2)
 					}
 
 					// Encrypt temp file
 					err = encryptFile(tempFile.Name(), pw)
 					if err != nil {
-						return cli.NewExitError(err, 2)
+						return cli.Exit(err, 2)
 					}
 
 					// Close temp file before rename to avoid issues on Windows
@@ -251,18 +251,18 @@ func main() {
 					var decryptedContents []byte
 					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					err = ioutil.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					err = cleanupFile(tempFile)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 				}
 
@@ -288,7 +288,7 @@ func main() {
 			Action: func(c *cli.Context) error {
 				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Get Vault Password
@@ -296,7 +296,7 @@ func main() {
 				var pw string
 				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 				krk.Println("retrieved old password")
 
@@ -305,7 +305,7 @@ func main() {
 				var newPw string
 				newPw, err = retrieveVaultPassword(newVaultPassword, "New Vault password:")
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 				krk.Println("retrieved new password")
 
@@ -314,11 +314,11 @@ func main() {
 					var confirmPw string
 					confirmPw, err = retrieveVaultPassword("", "Confirm New Vault password:")
 					if err != nil {
-						return cli.NewExitError(err, 2)
+						return cli.Exit(err, 2)
 					}
 
 					if newPw != confirmPw {
-						return cli.NewExitError(errors.New("ERROR! Passwords do not match"), 2)
+						return cli.Exit(errors.New("ERROR! Passwords do not match"), 2)
 					}
 					krk.Println("new password confirmed")
 				}
@@ -329,30 +329,30 @@ func main() {
 					krk.Printf("processing: %s", file)
 					result, err := decryptFile(file, pw)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Create a new temp file
 					var tempFile *os.File
 					tempFile, err = createTempFile()
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Write decrypted inputs to temp file
 					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Encrypt temp file with new pw
 					result, err = avtool.EncryptFile(tempFile.Name(), newPw)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Close temp file before rename to avoid issues on Windows
@@ -366,18 +366,18 @@ func main() {
 					var decryptedContents []byte
 					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					err = ioutil.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					err = cleanupFile(tempFile)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 				}
 
@@ -399,7 +399,7 @@ func main() {
 			Action: func(c *cli.Context) error {
 				vaultFileName, err := validateAndGetVaultFileToCreate(c)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Get Vault Password
@@ -407,7 +407,7 @@ func main() {
 				var pw string
 				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Open editor to get input
@@ -419,20 +419,20 @@ func main() {
 				kcre.Println("opening editor")
 				err = survey.AskOne(prompt, &input)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				kcre.Printf("encrypting input of length: %d", len(input))
 				var result string
 				result, err = avtool.Encrypt(input, pw)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Write encrypted input to new file location
 				err = ioutil.WriteFile(vaultFileName, []byte(result), 0644)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				println("Vault file created")
@@ -453,7 +453,7 @@ func main() {
 			Action: func(c *cli.Context) error {
 				vaultFileNames, err := validateAndGetVaultFile(c)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Get Vault Password
@@ -461,7 +461,7 @@ func main() {
 				var pw string
 				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Decrypt
@@ -470,19 +470,19 @@ func main() {
 					kview.Printf("processing: %s", file)
 					result, err := decryptFile(file, pw)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Create a new temp file
 					var tempFile *os.File
 					tempFile, err = createTempFile()
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Check for TTY
@@ -499,7 +499,7 @@ func main() {
 					cmd.Stderr = os.Stderr
 					err = cmd.Run()
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 
 					// Close temp file before cleanup to avoid issues on Windows
@@ -510,7 +510,7 @@ func main() {
 
 					err = cleanupFile(tempFile)
 					if err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 				}
 
@@ -538,13 +538,13 @@ func main() {
 				vaultPassword := c.String("vault-password-file")
 				pw, err = retrieveVaultPassword(vaultPassword, "Vault password:")
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				var strToEncrypt string
 				strToEncrypt, err = validateAndGetStringToEncrypt(c)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				// Encrypt
@@ -552,7 +552,7 @@ func main() {
 				var result string
 				result, err = avtool.Encrypt(strToEncrypt, pw)
 				if err != nil {
-					return cli.NewExitError(err, 2)
+					return cli.Exit(err, 2)
 				}
 
 				variableName := c.String("name")

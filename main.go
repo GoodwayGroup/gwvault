@@ -9,7 +9,7 @@ import (
 	"github.com/clok/kemba"
 	"github.com/pbthorste/avtool"
 	"github.com/urfave/cli/v2"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 	"io/ioutil"
 	"log"
 	"os"
@@ -38,7 +38,7 @@ var (
 // OG: [create|decrypt|edit|encrypt|encrypt_string|rekey|view] [options] [vaultfile.yml]
 // DONE: [create|decrypt|edit|encrypt|encrypt_string|rekey|view]
 
-func main() {
+func main() { //nolint:gocyclo
 	k.Println("executing")
 
 	im, err := cdocs.InstallManpageCommand(&cdocs.InstallManpageCommandInput{
@@ -487,7 +487,7 @@ func main() {
 
 					// Check for TTY
 					var command string
-					if terminal.IsTerminal(int(os.Stdin.Fd())) { // We have TTY!
+					if term.IsTerminal(int(os.Stdin.Fd())) { // We have TTY!
 						command = "less" // pick less to allow for search and other niceties
 					} else {
 						command = "cat"

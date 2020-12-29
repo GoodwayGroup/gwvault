@@ -2,10 +2,27 @@
 ## [Unreleased]
 
 
+<a name="v1.8.2"></a>
+## [v1.8.2] - 2020-12-29
+### Chore
+- **deps:** port to using golang.org/x/term
+- **deps:** update module urfave/cli/v2 to v2.3.0
+- **deps:** update module clok/cdocs tp v0.2.3
+- **docs:** updated README with asdf plugin installation
+- **workflow:** add github workflow for linting
+
+### Pull Requests
+- chore(deps): update golang.org/x/crypto commit hash to eec23a3 ([#24](https://github.com/GoodwayGroup/gwvault/issues/24))
+- chore(deps): update module alecaivazis/survey/v2 to v2.2.7 ([#23](https://github.com/GoodwayGroup/gwvault/issues/23))
+
+
 <a name="v1.8.1"></a>
 ## [v1.8.1] - 2020-10-28
 ### Bug Fixes
 - **file rename:** deprecate use of os.Rename in favor of ioutil.WriteFile
+
+### Features
+- **release:** v1.8.1
 
 ### Pull Requests
 - fix(file rename): Overwrite original file rather than use Rename ([#21](https://github.com/GoodwayGroup/gwvault/issues/21))
@@ -132,7 +149,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.1...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.2...HEAD
+[v1.8.2]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.1...v1.8.2
 [v1.8.1]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.0...v1.8.1
 [v1.8.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.2...v1.8.0
 [v1.7.2]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.1...v1.7.2

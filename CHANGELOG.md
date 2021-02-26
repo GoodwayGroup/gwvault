@@ -2,6 +2,20 @@
 ## [Unreleased]
 
 
+<a name="v1.8.3"></a>
+## [v1.8.3] - 2021-02-26
+### Bug Fixes
+- **deps:** update module github.com/alecaivazis/survey/v2 to v2.2.8
+- **deps:** update golang.org/x/term commit hash to 6a3ed07
+- **deps:** update golang.org/x/crypto commit hash to 5ea612d
+
+### Chore
+- **renovate:** add gomodTidy option
+
+### Pull Requests
+- chore(deps): update golang.org/x/term commit hash to 2321bbc ([#25](https://github.com/GoodwayGroup/gwvault/issues/25))
+
+
 <a name="v1.8.2"></a>
 ## [v1.8.2] - 2020-12-29
 ### Chore
@@ -10,6 +24,9 @@
 - **deps:** update module clok/cdocs tp v0.2.3
 - **docs:** updated README with asdf plugin installation
 - **workflow:** add github workflow for linting
+
+### Features
+- **release:** v1.8.2
 
 ### Pull Requests
 - chore(deps): update golang.org/x/crypto commit hash to eec23a3 ([#24](https://github.com/GoodwayGroup/gwvault/issues/24))
@@ -149,7 +166,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.2...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.3...HEAD
+[v1.8.3]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.2...v1.8.3
 [v1.8.2]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.1...v1.8.2
 [v1.8.1]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.0...v1.8.1
 [v1.8.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.7.2...v1.8.0

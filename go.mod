@@ -8,6 +8,6 @@ require (
 	github.com/clok/kemba v0.7.1
 	github.com/pbthorste/avtool v0.0.0-20170525210117-6dec4ba971b0
 	github.com/urfave/cli/v2 v2.3.0
-	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
+	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83 // indirect
 	golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf
 )

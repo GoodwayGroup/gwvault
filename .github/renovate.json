@@ -1,5 +1,6 @@
 {
     "extends": [
+        "group:allNonMajor",
         "github>GoodwayGroup/renovate-config"
     ],
     "postUpdateOptions": ["gomodTidy"]

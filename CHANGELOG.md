@@ -2,6 +2,15 @@
 ## [Unreleased]
 
 
+<a name="v2.0.0"></a>
+## [v2.0.0] - 2021-03-02
+### Chore
+- **renovate:** add extension for group:allNonMajor
+
+### Features
+- **avtool:** port to clok/avtool/v2 module
+
+
 <a name="v1.8.3"></a>
 ## [v1.8.3] - 2021-02-26
 ### Bug Fixes
@@ -11,6 +20,9 @@
 
 ### Chore
 - **renovate:** add gomodTidy option
+
+### Features
+- **release:** v1.8.3
 
 ### Pull Requests
 - chore(deps): update golang.org/x/term commit hash to 2321bbc ([#25](https://github.com/GoodwayGroup/gwvault/issues/25))
@@ -166,7 +178,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.3...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.0...HEAD
+[v2.0.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.3...v2.0.0
 [v1.8.3]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.2...v1.8.3
 [v1.8.2]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.1...v1.8.2
 [v1.8.1]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.0...v1.8.1

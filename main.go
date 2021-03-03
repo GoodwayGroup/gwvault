@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/GoodwayGroup/gwvault/info"
+	"github.com/GoodwayGroup/gwvault/v2/info"
 	"github.com/clok/avtool/v2"
 	"github.com/clok/cdocs"
 	"github.com/clok/kemba"

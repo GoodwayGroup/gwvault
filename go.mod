@@ -1,4 +1,4 @@
-module github.com/GoodwayGroup/gwvault
+module github.com/GoodwayGroup/gwvault/v2
 
 go 1.14
 

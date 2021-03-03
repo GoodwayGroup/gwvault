@@ -2,6 +2,15 @@
 ## [Unreleased]
 
 
+<a name="v2.0.1"></a>
+## [v2.0.1] - 2021-03-03
+### Bug Fixes
+- **v2:** bump go.mod to v2
+
+### Chore
+- **github actions:** add go proxy warming
+
+
 <a name="v2.0.0"></a>
 ## [v2.0.0] - 2021-03-02
 ### Chore
@@ -9,6 +18,7 @@
 
 ### Features
 - **avtool:** port to clok/avtool/v2 module
+- **release:** v2.0.0
 
 
 <a name="v1.8.3"></a>
@@ -178,7 +188,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.1...HEAD
+[v2.0.1]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.3...v2.0.0
 [v1.8.3]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.2...v1.8.3
 [v1.8.2]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.1...v1.8.2

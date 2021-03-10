@@ -24,7 +24,7 @@ xbuild: clean
 		-os="darwin" \
 		-arch="amd64" \
 		${LDFLAGS} \
-		-output="build/{{.Dir}}_$(VERSION)_{{.OS}}_{{.Arch}}/$(NAME)" \
+		-output="build/$(NAME)_$(VERSION)_{{.OS}}_{{.Arch}}/$(NAME)" \
 		./...
 
 package: xbuild

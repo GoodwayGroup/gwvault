@@ -2,6 +2,17 @@
 ## [Unreleased]
 
 
+<a name="v2.1.0"></a>
+## [v2.1.0] - 2021-03-15
+### Bug Fixes
+- **build:** correct naming of build artifact
+
+### Chore
+- **ci:** remove deprecated release commands
+- **ci:** port to using golangci-lint and goreleaser github action
+- **go.mod:** bump to go 1.16
+
+
 <a name="v2.0.1"></a>
 ## [v2.0.1] - 2021-03-03
 ### Bug Fixes
@@ -9,6 +20,9 @@
 
 ### Chore
 - **github actions:** add go proxy warming
+
+### Features
+- **release:** v2.0.1
 
 
 <a name="v2.0.0"></a>
@@ -188,7 +202,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.0...HEAD
+[v2.1.0]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.1...v2.1.0
 [v2.0.1]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.3...v2.0.0
 [v1.8.3]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.2...v1.8.3

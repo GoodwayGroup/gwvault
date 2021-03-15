@@ -5,10 +5,10 @@ github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8 h1:xzYJEypr/85nB
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
 github.com/clok/avtool/v2 v2.0.0 h1:PURCZXIrK0Kjxgse+hgDRYaFS+JwwmdEcDCcRiVbHLc=
 github.com/clok/avtool/v2 v2.0.0/go.mod h1:2GKOsgKLvNzcLP3Nfe1S+otgRRtfpNoYkp1JqwyCZbY=
-github.com/clok/cdocs v0.2.3 h1:f904ot2nDb8svQMnY9Q3bGAl3QQipDitPlN+4OAh1+c=
-github.com/clok/cdocs v0.2.3/go.mod h1:+kWwHf9RxV9l5Mw1/IA0vdGPbwzAEZcI9xQ0okuKNvQ=
-github.com/clok/kemba v0.7.1 h1:HwHXCo3FtJUDh7wqiS9ANWgIfcZaFgl3AZY8jXh96vw=
-github.com/clok/kemba v0.7.1/go.mod h1:uOPcD45+hSOhBIM+C//dT51Sjy56FCdwkeaFU9lx1gU=
+github.com/clok/cdocs v1.1.0 h1:cBFH09i/Es1SV0zIheSp4ra6gTVEva7c6lLiazThHMQ=
+github.com/clok/cdocs v1.1.0/go.mod h1:lN5xZCSMrXlgScQaxLnXVVzmeXYXAFL0mNl6xXPI6LM=
+github.com/clok/kemba v1.1.0 h1:89Xp9iMh42cmbH88GpGzUJcxnuhkH8UqW3EMBnv4R2Y=
+github.com/clok/kemba v1.1.0/go.mod h1:rsYZSVvRq+nopEvJpMRWDV+pbg4pUKMtXjAuTLHAENQ=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/cpuguy83/go-md2man/v2 v2.0.0 h1:EoUDS0afbrsXAZ9YQ9jdu/mZ2sXgT1/2yyNng4PGlyM=
 github.com/cpuguy83/go-md2man/v2 v2.0.0/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
@@ -16,8 +16,8 @@ github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ3
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/gookit/color v1.2.7 h1:4qePMNWZhrmbfYJDix+J4V2l0iVW+6jQGjicELlN14E=
-github.com/gookit/color v1.2.7/go.mod h1:AhIE+pS6D4Ql0SQWbBeXPHw7gY0/sjHoA4s/n1KB7xg=
+github.com/gookit/color v1.3.8 h1:w2WcSwaCa1ojRWO60Mm4GJUJomBNKR9G+x9DwaaCL1c=
+github.com/gookit/color v1.3.8/go.mod h1:R3ogXq2B9rTbXoSHJ1HyUVAZ3poOJHpd9nQmyGZsfvQ=
 github.com/hinshun/vt10x v0.0.0-20180616224451-1954e6464174 h1:WlZsjVhE8Af9IcZDGgJGQpNflI3+MJSBhsgT5PCtzBQ=
 github.com/hinshun/vt10x v0.0.0-20180616224451-1954e6464174/go.mod h1:DqJ97dSdRW1W22yXSB90986pcOyQ7r45iio1KN2ez1A=
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 h1:Z9n2FFNUXsshfwJMBgNA0RU6/i7WVaAegv3PtuIHPMs=
@@ -47,8 +47,6 @@ github.com/shurcooL/sanitized_anchor_name v1.0.0/go.mod h1:1NzhyTcUVG4SuEtjjoZeV
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.2.1/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
-github.com/stretchr/testify v1.6.1 h1:hDPOHmpOpP40lSULcqw7IrRb/u7w6RpDC9399XyoNd0=
-github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/urfave/cli/v2 v2.3.0 h1:qph92Y649prgesehzOrQjdWyxFOp/QVM+6imKHad91M=

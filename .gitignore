@@ -18,3 +18,4 @@ vault-key
 .DS_Store
 bin
 benchmark/results.html
+dist/

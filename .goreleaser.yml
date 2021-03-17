@@ -37,3 +37,15 @@ changelog:
 
 snapshot:
   name_template: "{{ .Tag }}-next"
+
+brews:
+  - tap:
+      owner: GoodwayGroup
+      name: homebrew-gwvault
+    homepage: "https://goodwaygroup.github.io/gwvault/"
+    description: "GoodwayGroup Ansible Vault - ansible-vault CLI reimplemented in go"
+    license: "MIT"
+    test: |
+      system "#{bin}/gwvault --help"
+    install: |
+      bin.install "gwvault"

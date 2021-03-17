@@ -2,6 +2,14 @@
 ## [Unreleased]
 
 
+<a name="v2.1.1"></a>
+## [v2.1.1] - 2021-03-16
+### Chore
+- remove deprecated github action
+- **goreleaser:** remove workflow trigger
+- **release:** update homebrew push
+
+
 <a name="v2.1.0"></a>
 ## [v2.1.0] - 2021-03-15
 ### Bug Fixes
@@ -11,6 +19,9 @@
 - **ci:** remove deprecated release commands
 - **ci:** port to using golangci-lint and goreleaser github action
 - **go.mod:** bump to go 1.16
+
+### Features
+- **release:** v2.1.0
 
 
 <a name="v2.0.1"></a>
@@ -202,7 +213,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.1...HEAD
+[v2.1.1]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.1...v2.1.0
 [v2.0.1]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/GoodwayGroup/gwvault/compare/v1.8.3...v2.0.0

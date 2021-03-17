@@ -38,10 +38,6 @@ GLOBAL OPTIONS:
 
 ## Installation
 
-```
-$ curl https://i.jpillora.com/GoodwayGroup/gwvault! | bash
-```
-
 ### [`asdf` plugin](https://github.com/GoodwayGroup/asdf-gwvault)
 
 Add plugin:
@@ -53,6 +49,19 @@ $ asdf plugin add gwvault
 Install the latest version:
 ```
 $ asdf install gwvault latest
+```
+
+### [Homebrew](https://brew.sh) (for macOS users)
+
+```
+brew tap GoodwayGroup/gwvault
+brew install gwvault
+```
+
+### curl binary
+
+```
+$ curl https://i.jpillora.com/GoodwayGroup/gwvault! | bash
 ```
 
 ### man page

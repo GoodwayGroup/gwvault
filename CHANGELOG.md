@@ -2,12 +2,24 @@
 ## [Unreleased]
 
 
+<a name="v2.1.2"></a>
+## [v2.1.2] - 2021-04-01
+### Chore
+- update README with new install methods
+
+### Ci
+- **docker:** add goreleaser docker GitHub Container Registry support
+
+
 <a name="v2.1.1"></a>
 ## [v2.1.1] - 2021-03-16
 ### Chore
 - remove deprecated github action
 - **goreleaser:** remove workflow trigger
 - **release:** update homebrew push
+
+### Features
+- **release:** v2.1.1
 
 
 <a name="v2.1.0"></a>
@@ -213,7 +225,8 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.1...HEAD
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.2...HEAD
+[v2.1.2]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.1...v2.1.0
 [v2.0.1]: https://github.com/GoodwayGroup/gwvault/compare/v2.0.0...v2.0.1

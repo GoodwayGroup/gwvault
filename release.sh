@@ -2,6 +2,8 @@
 
 set +e
 
+NAME=gwvault
+
 #
 # Set Colors
 #
@@ -64,29 +66,34 @@ if [ "x${VERSION}x" = "xx" ]; then
   exit 1
 fi
 
-h1 "Preparing release of $VERSION"
+if [[ "$(git tag -l | grep -c "$VERSION" 2>/dev/null)" != "0" ]]; then
+  error "Tag $VERSION already exists in this repo. Please use a different version."
+  exit 1
+fi
+
+h1 "Preparing release of $VERSION for $NAME"
 
 h2 "Updating docs"
 make docs
-if [[ "$(git status -s docs/gwvault.* 2>/dev/null | wc -l)" == "0" ]]; then
+if [[ "$(git status -s docs/${NAME}.* 2>/dev/null | wc -l)" == "0" ]]; then
   note "No changes to docs"
 else
   note "Committing changes to docs"
-  git add docs/gwvault.*
+  git add docs/${NAME}.*
   git commit -m "chore(docs): updating docs for version $VERSION"
 fi
 
 h2 "Updating CHANGELOG.md"
-git-chglog --next-tag $VERSION -o CHANGELOG.md && git add CHANGELOG.md
-git commit -m "feat(release): $VERSION"
+make changelog
+git add CHANGELOG.md
+git commit -m "chore(release): $VERSION"
 
 h2 "Tagging version: $VERSION"
-git tag $VERSION
+git tag "$VERSION"
 
-note "Pushing branch: git push origin $(git rev-parse --abbrev-ref HEAD)"
-git push origin $(git rev-parse --abbrev-ref HEAD)
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+note "Pushing branch: git push origin $BRANCH"
+git push origin "$BRANCH"
 
 note "Pushing tag: git push origin $VERSION"
-git push origin $VERSION
-
-success "Done!"
+git push origin "$VERSION"

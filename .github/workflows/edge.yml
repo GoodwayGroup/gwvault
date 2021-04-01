@@ -1,16 +1,16 @@
-name: goreleaser
+name: docker
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - main
 
 env:
   GO_VERSION: "1.16"
   DOCKER_REGISTRY: "ghcr.io"
 
 jobs:
-  goreleaser:
+  edge:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -30,10 +30,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
-        with:
-          version: latest
-          args: release --rm-dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GORELEASER_CLOK_TOKEN }}
+      - name: Build and Push docker image
+        run: |
+          DOCKER_TAG=edge make docker
+          docker push ${{ env.DOCKER_REGISTRY }}/goodwaygroup/gwvault:edge

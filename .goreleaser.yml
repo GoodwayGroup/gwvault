@@ -38,6 +38,13 @@ changelog:
 snapshot:
   name_template: "{{ .Tag }}-next"
 
+dockers:
+  - ids:
+      - gwvault
+    image_templates:
+      - "ghcr.io/goodwaygroup/gwvault:{{ .RawVersion }}"
+      - "ghcr.io/goodwaygroup/gwvault:latest"
+
 brews:
   - tap:
       owner: GoodwayGroup

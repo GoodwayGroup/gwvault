@@ -5,8 +5,8 @@ github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8 h1:xzYJEypr/85nB
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
 github.com/clok/avtool/v2 v2.1.0 h1:hn4ONHhV8P+Xha+1/fEYLeKkXVlcos60eiEo+lj8WDw=
 github.com/clok/avtool/v2 v2.1.0/go.mod h1:a6Dx5UVVitr1AhSqAXI11UJpb3w+hMM8cMCniVhMmgg=
-github.com/clok/cdocs v1.1.2 h1:PZHvFhQ1r9qVkrpBKCH2ZUCShJAxkdcc28OHAI6WYHQ=
-github.com/clok/cdocs v1.1.2/go.mod h1:MHdLYRxv66KNophPTW4VJOkdGJhDhpSJ1ka6WuIbrJg=
+github.com/clok/cdocs v1.2.0 h1:sFhbBmTgV1rC8TjRSzBD7RIXP4fSnw/gTBPd5YuRBJM=
+github.com/clok/cdocs v1.2.0/go.mod h1:MHdLYRxv66KNophPTW4VJOkdGJhDhpSJ1ka6WuIbrJg=
 github.com/clok/kemba v1.1.1 h1:s1G0dd7NrScBuYcBHQNzPJ1u3q/herMuY9VGYFSleTA=
 github.com/clok/kemba v1.1.1/go.mod h1:rsYZSVvRq+nopEvJpMRWDV+pbg4pUKMtXjAuTLHAENQ=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=

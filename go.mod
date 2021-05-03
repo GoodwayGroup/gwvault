@@ -8,5 +8,5 @@ require (
 	github.com/clok/cdocs v1.1.2
 	github.com/clok/kemba v1.1.1
 	github.com/urfave/cli/v2 v2.3.0
-	golang.org/x/term v0.0.0-20210422114643-f5beecf764ed
+	golang.org/x/term v0.0.0-20210503060354-a79de5458b56
 )

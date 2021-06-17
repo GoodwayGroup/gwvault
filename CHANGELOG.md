@@ -2,10 +2,21 @@
 ## [Unreleased]
 
 
-<a name="2.1.4"></a>
-## [2.1.4] - 2021-05-13
+<a name="v2.1.5"></a>
+## [v2.1.5] - 2021-06-17
+### Pull Requests
+- chore(deps): update alpine docker tag to v3.14.0 ([#43](https://github.com/GoodwayGroup/gwvault/issues/43))
+- fix(deps): update golang.org/x/term commit hash to 6886f2d ([#42](https://github.com/GoodwayGroup/gwvault/issues/42))
+- ci: update goreleaser token ([#41](https://github.com/GoodwayGroup/gwvault/issues/41))
+
+
+<a name="v2.1.4"></a>
+## [v2.1.4] - 2021-05-13
 ### Bug Fixes
 - **deps:** update module github.com/clok/avtool to v2.1.1
+
+### Chore
+- **release:** 2.1.4
 
 ### Pull Requests
 - fix(deps): update golang.org/x/term commit hash to a79de54 ([#39](https://github.com/GoodwayGroup/gwvault/issues/39))
@@ -250,8 +261,9 @@
 <a name="1.0.0"></a>
 ## 1.0.0 - 2018-08-17
 
-[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/2.1.4...HEAD
-[2.1.4]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.3...2.1.4
+[Unreleased]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.5...HEAD
+[v2.1.5]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.4...v2.1.5
+[v2.1.4]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.3...v2.1.4
 [v2.1.3]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.2...v2.1.3
 [v2.1.2]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/GoodwayGroup/gwvault/compare/v2.1.0...v2.1.1

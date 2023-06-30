@@ -3,8 +3,8 @@ github.com/AlecAivazis/survey/v2 v2.2.12/go.mod h1:6d4saEvBsfSHXeN1a5OA5m2+HJ2Lu
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8 h1:xzYJEypr/85nBpB11F9br+3HUrpgb+fcm5iADzXXYEw=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
-github.com/clok/avtool/v2 v2.1.1 h1:544q24IsWd6JOQahJBDic7EERHcy3QQGmg27r/7Wjr0=
-github.com/clok/avtool/v2 v2.1.1/go.mod h1:29vZgxJiJR81yF0ySbCfiFBgyWDDruPAj8a31fOGulQ=
+github.com/clok/avtool/v2 v2.2.0 h1:n9R2xXuijgVA+Bo1BAWrYB3tvgQU9D/MAGXB2YP/2is=
+github.com/clok/avtool/v2 v2.2.0/go.mod h1:29vZgxJiJR81yF0ySbCfiFBgyWDDruPAj8a31fOGulQ=
 github.com/clok/cdocs v1.2.0 h1:sFhbBmTgV1rC8TjRSzBD7RIXP4fSnw/gTBPd5YuRBJM=
 github.com/clok/cdocs v1.2.0/go.mod h1:MHdLYRxv66KNophPTW4VJOkdGJhDhpSJ1ka6WuIbrJg=
 github.com/clok/kemba v1.1.1 h1:s1G0dd7NrScBuYcBHQNzPJ1u3q/herMuY9VGYFSleTA=

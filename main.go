@@ -3,6 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
+	"os"
+	"os/exec"
+	"runtime"
+	"strings"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/GoodwayGroup/gwvault/v2/info"
 	"github.com/clok/avtool/v2"
@@ -10,12 +16,6 @@ import (
 	"github.com/clok/kemba"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/term"
-	"io/ioutil"
-	"log"
-	"os"
-	"os/exec"
-	"runtime"
-	"strings"
 )
 
 var (
@@ -143,7 +143,7 @@ func main() { //nolint:gocyclo
 					}
 
 					// Write decrypted inputs to temp file
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -157,12 +157,12 @@ func main() { //nolint:gocyclo
 					// Move temp file to old file
 					kdec.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					var decryptedContents []byte
-					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
+					decryptedContents, err = os.ReadFile(tempFile.Name())
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
 
-					err = ioutil.WriteFile(file, decryptedContents, 0644)
+					err = os.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
 						return cli.Exit(err, 1)
@@ -219,7 +219,7 @@ func main() { //nolint:gocyclo
 					}
 
 					// Write decrypted inputs to temp file
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -249,12 +249,12 @@ func main() { //nolint:gocyclo
 					// Move temp file to old file
 					kedit.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					var decryptedContents []byte
-					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
+					decryptedContents, err = os.ReadFile(tempFile.Name())
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
 
-					err = ioutil.WriteFile(file, decryptedContents, 0644)
+					err = os.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
 						return cli.Exit(err, 1)
@@ -340,7 +340,7 @@ func main() { //nolint:gocyclo
 					}
 
 					// Write decrypted inputs to temp file
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -350,7 +350,7 @@ func main() { //nolint:gocyclo
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -364,12 +364,12 @@ func main() { //nolint:gocyclo
 					// Move temp file to old file
 					krk.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					var decryptedContents []byte
-					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
+					decryptedContents, err = os.ReadFile(tempFile.Name())
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
 
-					err = ioutil.WriteFile(file, decryptedContents, 0644)
+					err = os.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
 						return cli.Exit(err, 1)
@@ -430,7 +430,7 @@ func main() { //nolint:gocyclo
 				}
 
 				// Write encrypted input to new file location
-				err = ioutil.WriteFile(vaultFileName, []byte(result), 0644)
+				err = os.WriteFile(vaultFileName, []byte(result), 0644)
 				if err != nil {
 					return cli.Exit(err, 2)
 				}
@@ -480,7 +480,7 @@ func main() { //nolint:gocyclo
 						return cli.Exit(err, 1)
 					}
 
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -609,7 +609,7 @@ func main() { //nolint:gocyclo
 }
 
 func createTempFile() (*os.File, error) {
-	t, err := ioutil.TempFile("", "vault")
+	t, err := os.CreateTemp("", "vault")
 	if err != nil {
 		return nil, err
 	}
@@ -657,7 +657,7 @@ func encryptFile(file string, pw string) error {
 	kencf.Printf("encryption successful: %s", file)
 
 	kencf.Printf("writing out encrypted inputs: %s", file)
-	err = ioutil.WriteFile(file, []byte(result), 0644)
+	err = os.WriteFile(file, []byte(result), 0644)
 	if err != nil {
 		return err
 	}
@@ -784,7 +784,7 @@ func retrieveVaultPassword(vaultPasswordFile string, msg string) (string, error)
 		if _, err := os.Stat(vaultPasswordFile); os.IsNotExist(err) {
 			return "", errors.New("ERROR: vault-password-file, could not find: " + vaultPasswordFile)
 		}
-		pw, err := ioutil.ReadFile(vaultPasswordFile)
+		pw, err := os.ReadFile(vaultPasswordFile)
 		if err != nil {
 			return "", errors.New("ERROR: vault-password-file, " + err.Error())
 		}

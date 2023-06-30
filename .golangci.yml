@@ -16,6 +16,6 @@ linters:
     - gocritic
     - gocyclo
     - gofmt
-    - golint
+    - revive
     - misspell
     - unconvert

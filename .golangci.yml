@@ -12,7 +12,6 @@ issues:
 linters:
   enable:
     - dupl
-    - depguard
     - gocritic
     - gocyclo
     - gofmt

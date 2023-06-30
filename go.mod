@@ -3,12 +3,12 @@ module github.com/GoodwayGroup/gwvault/v2
 go 1.20
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.2.12
+	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/clok/avtool/v2 v2.2.0
 	github.com/clok/cdocs v1.2.0
 	github.com/clok/kemba v1.2.0
 	github.com/urfave/cli/v2 v2.3.0
-	golang.org/x/term v0.0.0-20210615171337-6886f2dfbf5b
+	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
 )
 
 require (
@@ -24,7 +24,7 @@ require (
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
-	golang.org/x/crypto v0.0.0-20210513122933-cd7d49e622d5 // indirect
-	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
-	golang.org/x/text v0.3.3 // indirect
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
+	golang.org/x/text v0.4.0 // indirect
 )

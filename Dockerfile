@@ -1,6 +1,16 @@
-FROM alpine:3.14.0
+FROM golang:1.20 AS build-stage
 
-COPY gwvault /usr/local/bin/gwvault
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN make build
+
+FROM alpine:3.18
+
+COPY --from=build-stage /app/bin/gwvault /usr/local/bin/gwvault
 RUN chmod +x /usr/local/bin/gwvault
 
 RUN mkdir /workdir

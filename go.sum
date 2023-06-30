@@ -3,8 +3,8 @@ github.com/AlecAivazis/survey/v2 v2.3.7/go.mod h1:xUTIdE4KCOIjsBAE1JYsUPoCqYdZ1r
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2 h1:+vx7roKuyA63nhn5WAunQHLTznkw5W8b1Xc0dNjp83s=
 github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2/go.mod h1:HBCaDeC1lPdgDeDbhX8XFpy1jqjK0IBG8W5K+xYqA0w=
-github.com/clok/avtool/v2 v2.2.0 h1:n9R2xXuijgVA+Bo1BAWrYB3tvgQU9D/MAGXB2YP/2is=
-github.com/clok/avtool/v2 v2.2.0/go.mod h1:29vZgxJiJR81yF0ySbCfiFBgyWDDruPAj8a31fOGulQ=
+github.com/clok/avtool/v3 v3.0.0 h1:Vg+wP+xJcoeGQb6FAWonhIq1b3ZKSa94nQR1XdQYNug=
+github.com/clok/avtool/v3 v3.0.0/go.mod h1:DxRJi4wTKWnfB1MBreTWklWs7sdwNMhBGeQhM3hyinU=
 github.com/clok/cdocs v1.2.0 h1:sFhbBmTgV1rC8TjRSzBD7RIXP4fSnw/gTBPd5YuRBJM=
 github.com/clok/cdocs v1.2.0/go.mod h1:MHdLYRxv66KNophPTW4VJOkdGJhDhpSJ1ka6WuIbrJg=
 github.com/clok/kemba v1.1.1/go.mod h1:rsYZSVvRq+nopEvJpMRWDV+pbg4pUKMtXjAuTLHAENQ=
@@ -75,7 +75,6 @@ github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 h1:bAn7/zixMGCfxrRT
 github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673/go.mod h1:N3UwUGtsrSj3ccvlPHLoLsHnpR27oXr4ZE984MbSER8=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
-golang.org/x/crypto v0.0.0-20210513122933-cd7d49e622d5/go.mod h1:P+XmwS30IXTQdn5tA2iutPOUgjI07+tq3H3K9MVA1s8=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
 golang.org/x/crypto v0.10.0 h1:LKqV2xt9+kDzSTfOhx4FrkEBcMrAgHSYgzywV9zcGmM=
 golang.org/x/crypto v0.10.0/go.mod h1:o4eNf7Ede1fv+hwOwZsTHl9EsPFO6q6ZvYR8vYfY45I=

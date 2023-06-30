@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
-	github.com/clok/avtool/v2 v2.2.0
+	github.com/clok/avtool/v3 v3.0.0
 	github.com/clok/cdocs v1.2.0
 	github.com/clok/kemba v1.2.0
 	github.com/urfave/cli/v2 v2.25.7

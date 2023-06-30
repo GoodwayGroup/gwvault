@@ -11,7 +11,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/GoodwayGroup/gwvault/v2/info"
-	"github.com/clok/avtool/v2"
+	"github.com/clok/avtool/v3"
 	"github.com/clok/cdocs"
 	"github.com/clok/kemba"
 	"github.com/urfave/cli/v2"
@@ -345,8 +345,14 @@ func main() { //nolint:gocyclo
 						return cli.Exit(err, 1)
 					}
 
+					// Convert newPw to *[]byte
+					newPwBytes := []byte(newPw)
+
 					// Encrypt temp file with new pw
-					result, err = avtool.EncryptFile(tempFile.Name(), newPw)
+					result, err = avtool.EncryptFile(&avtool.EncryptFileOptions{
+						Filename: tempFile.Name(),
+						Password: &newPwBytes,
+					})
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -422,9 +428,16 @@ func main() { //nolint:gocyclo
 					return cli.Exit(err, 2)
 				}
 
+				// convert input and password to []byte
+				inputBytes := []byte(input)
+				pwBytes := []byte(pw)
+
 				kcre.Printf("encrypting input of length: %d", len(input))
 				var result string
-				result, err = avtool.Encrypt(input, pw)
+				result, err = avtool.Encrypt(&avtool.EncryptOptions{
+					Body:     &inputBytes,
+					Password: &pwBytes,
+				})
 				if err != nil {
 					return cli.Exit(err, 2)
 				}
@@ -547,10 +560,17 @@ func main() { //nolint:gocyclo
 					return cli.Exit(err, 2)
 				}
 
+				// convert input and password to []byte
+				strToEncryptBytes := []byte(strToEncrypt)
+				pwBytes := []byte(pw)
+
 				// Encrypt
 				kencs.Printf("encrypting string of length: %d", len(strToEncrypt))
 				var result string
-				result, err = avtool.Encrypt(strToEncrypt, pw)
+				result, err = avtool.Encrypt(&avtool.EncryptOptions{
+					Body:     &strToEncryptBytes,
+					Password: &pwBytes,
+				})
 				if err != nil {
 					return cli.Exit(err, 2)
 				}
@@ -636,8 +656,14 @@ func cleanupFile(t *os.File) error {
 }
 
 func decryptFile(file string, pw string) (string, error) {
+	// convert password to []byte
+	pwBytes := []byte(pw)
+
 	kdecf.Printf("attempting decryption: %s", file)
-	result, err := avtool.DecryptFile(file, pw)
+	result, err := avtool.DecryptFile(&avtool.DecryptFileOptions{
+		Filename: file,
+		Password: &pwBytes,
+	})
 	if err != nil {
 		if strings.Compare(err.Error(), "ERROR: runtime error: index out of range") == 0 {
 			return "", fmt.Errorf("input is not a vault encrypted %s is not a vault encrypted file for %s", file, file)
@@ -649,8 +675,14 @@ func decryptFile(file string, pw string) (string, error) {
 }
 
 func encryptFile(file string, pw string) error {
+	// convert password to []byte
+	pwBytes := []byte(pw)
+
 	kencf.Printf("attempting encryption: %s", file)
-	result, err := avtool.EncryptFile(file, pw)
+	result, err := avtool.EncryptFile(&avtool.EncryptFileOptions{
+		Filename: file,
+		Password: &pwBytes,
+	})
 	if err != nil {
 		return err
 	}

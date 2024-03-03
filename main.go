@@ -597,7 +597,7 @@ func main() { //nolint:gocyclo
 			Name:    "version",
 			Aliases: []string{"v"},
 			Usage:   "Print version info",
-			Action: func(c *cli.Context) error {
+			Action: func(_ *cli.Context) error {
 				fmt.Printf("%s %s (%s/%s)\n", info.AppName, version, runtime.GOOS, runtime.GOARCH)
 				return nil
 			},

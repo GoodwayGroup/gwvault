@@ -3,19 +3,19 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/AlecAivazis/survey/v2"
-	"github.com/GoodwayGroup/gwvault/v2/info"
-	"github.com/clok/avtool/v2"
-	"github.com/clok/cdocs"
-	"github.com/clok/kemba"
-	"github.com/urfave/cli/v2"
-	"golang.org/x/term"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"runtime"
 	"strings"
+
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/GoodwayGroup/gwvault/v2/info"
+	"github.com/clok/avtool/v3"
+	"github.com/clok/cdocs"
+	"github.com/clok/kemba"
+	"github.com/urfave/cli/v2"
+	"golang.org/x/term"
 )
 
 var (
@@ -143,7 +143,7 @@ func main() { //nolint:gocyclo
 					}
 
 					// Write decrypted inputs to temp file
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -157,12 +157,12 @@ func main() { //nolint:gocyclo
 					// Move temp file to old file
 					kdec.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					var decryptedContents []byte
-					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
+					decryptedContents, err = os.ReadFile(tempFile.Name())
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
 
-					err = ioutil.WriteFile(file, decryptedContents, 0644)
+					err = os.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
 						return cli.Exit(err, 1)
@@ -219,7 +219,7 @@ func main() { //nolint:gocyclo
 					}
 
 					// Write decrypted inputs to temp file
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -249,12 +249,12 @@ func main() { //nolint:gocyclo
 					// Move temp file to old file
 					kedit.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					var decryptedContents []byte
-					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
+					decryptedContents, err = os.ReadFile(tempFile.Name())
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
 
-					err = ioutil.WriteFile(file, decryptedContents, 0644)
+					err = os.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
 						return cli.Exit(err, 1)
@@ -340,17 +340,23 @@ func main() { //nolint:gocyclo
 					}
 
 					// Write decrypted inputs to temp file
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
 
+					// Convert newPw to *[]byte
+					newPwBytes := []byte(newPw)
+
 					// Encrypt temp file with new pw
-					result, err = avtool.EncryptFile(tempFile.Name(), newPw)
+					result, err = avtool.EncryptFile(&avtool.EncryptFileOptions{
+						Filename: tempFile.Name(),
+						Password: &newPwBytes,
+					})
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -364,12 +370,12 @@ func main() { //nolint:gocyclo
 					// Move temp file to old file
 					krk.Printf("overwriting inputs %s -> %s", tempFile.Name(), file)
 					var decryptedContents []byte
-					decryptedContents, err = ioutil.ReadFile(tempFile.Name())
+					decryptedContents, err = os.ReadFile(tempFile.Name())
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
 
-					err = ioutil.WriteFile(file, decryptedContents, 0644)
+					err = os.WriteFile(file, decryptedContents, 0644)
 
 					if err != nil {
 						return cli.Exit(err, 1)
@@ -422,15 +428,22 @@ func main() { //nolint:gocyclo
 					return cli.Exit(err, 2)
 				}
 
+				// convert input and password to []byte
+				inputBytes := []byte(input)
+				pwBytes := []byte(pw)
+
 				kcre.Printf("encrypting input of length: %d", len(input))
 				var result string
-				result, err = avtool.Encrypt(input, pw)
+				result, err = avtool.Encrypt(&avtool.EncryptOptions{
+					Body:     &inputBytes,
+					Password: &pwBytes,
+				})
 				if err != nil {
 					return cli.Exit(err, 2)
 				}
 
 				// Write encrypted input to new file location
-				err = ioutil.WriteFile(vaultFileName, []byte(result), 0644)
+				err = os.WriteFile(vaultFileName, []byte(result), 0644)
 				if err != nil {
 					return cli.Exit(err, 2)
 				}
@@ -480,7 +493,7 @@ func main() { //nolint:gocyclo
 						return cli.Exit(err, 1)
 					}
 
-					err = ioutil.WriteFile(tempFile.Name(), []byte(result), 0644)
+					err = os.WriteFile(tempFile.Name(), []byte(result), 0644)
 					if err != nil {
 						return cli.Exit(err, 1)
 					}
@@ -547,10 +560,17 @@ func main() { //nolint:gocyclo
 					return cli.Exit(err, 2)
 				}
 
+				// convert input and password to []byte
+				strToEncryptBytes := []byte(strToEncrypt)
+				pwBytes := []byte(pw)
+
 				// Encrypt
 				kencs.Printf("encrypting string of length: %d", len(strToEncrypt))
 				var result string
-				result, err = avtool.Encrypt(strToEncrypt, pw)
+				result, err = avtool.Encrypt(&avtool.EncryptOptions{
+					Body:     &strToEncryptBytes,
+					Password: &pwBytes,
+				})
 				if err != nil {
 					return cli.Exit(err, 2)
 				}
@@ -609,7 +629,7 @@ func main() { //nolint:gocyclo
 }
 
 func createTempFile() (*os.File, error) {
-	t, err := ioutil.TempFile("", "vault")
+	t, err := os.CreateTemp("", "vault")
 	if err != nil {
 		return nil, err
 	}
@@ -636,8 +656,14 @@ func cleanupFile(t *os.File) error {
 }
 
 func decryptFile(file string, pw string) (string, error) {
+	// convert password to []byte
+	pwBytes := []byte(pw)
+
 	kdecf.Printf("attempting decryption: %s", file)
-	result, err := avtool.DecryptFile(file, pw)
+	result, err := avtool.DecryptFile(&avtool.DecryptFileOptions{
+		Filename: file,
+		Password: &pwBytes,
+	})
 	if err != nil {
 		if strings.Compare(err.Error(), "ERROR: runtime error: index out of range") == 0 {
 			return "", fmt.Errorf("input is not a vault encrypted %s is not a vault encrypted file for %s", file, file)
@@ -649,15 +675,21 @@ func decryptFile(file string, pw string) (string, error) {
 }
 
 func encryptFile(file string, pw string) error {
+	// convert password to []byte
+	pwBytes := []byte(pw)
+
 	kencf.Printf("attempting encryption: %s", file)
-	result, err := avtool.EncryptFile(file, pw)
+	result, err := avtool.EncryptFile(&avtool.EncryptFileOptions{
+		Filename: file,
+		Password: &pwBytes,
+	})
 	if err != nil {
 		return err
 	}
 	kencf.Printf("encryption successful: %s", file)
 
 	kencf.Printf("writing out encrypted inputs: %s", file)
-	err = ioutil.WriteFile(file, []byte(result), 0644)
+	err = os.WriteFile(file, []byte(result), 0644)
 	if err != nil {
 		return err
 	}
@@ -784,7 +816,7 @@ func retrieveVaultPassword(vaultPasswordFile string, msg string) (string, error)
 		if _, err := os.Stat(vaultPasswordFile); os.IsNotExist(err) {
 			return "", errors.New("ERROR: vault-password-file, could not find: " + vaultPasswordFile)
 		}
-		pw, err := ioutil.ReadFile(vaultPasswordFile)
+		pw, err := os.ReadFile(vaultPasswordFile)
 		if err != nil {
 			return "", errors.New("ERROR: vault-password-file, " + err.Error())
 		}

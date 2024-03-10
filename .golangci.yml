@@ -12,10 +12,9 @@ issues:
 linters:
   enable:
     - dupl
-    - depguard
     - gocritic
     - gocyclo
     - gofmt
-    - golint
+    - revive
     - misspell
     - unconvert

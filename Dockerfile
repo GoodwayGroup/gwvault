@@ -1,4 +1,4 @@
-FROM alpine:3.14.0
+FROM alpine:3.20.3
 
 COPY gwvault /usr/local/bin/gwvault
 RUN chmod +x /usr/local/bin/gwvault
